@@ -2,6 +2,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.io.File;
 
 public class Controller implements ActionListener {
@@ -18,7 +20,7 @@ public class Controller implements ActionListener {
             case "Open_File":
                 File file = viewer.getFile();
                 if (file == null) {
-                    viewer.update("");
+                    return;
                 } else {
                     String text = openFile(file);
                     viewer.update(text);
@@ -31,25 +33,33 @@ public class Controller implements ActionListener {
     }
 
     public String openFile(File file) {
-        
-        String text;
 
+        String text = "";
+        FileInputStream fis = null;
+        
         try {
             char[] tempArray = new char[(int)file.length()];
-            FileInputStream in = new FileInputStream(file);
+            fis = new FileInputStream(file);
+            InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
 
             int unicode;
             int index = 0;
-
-            while ((unicode = in.read()) != -1) {
+            
+            while ((unicode = isr.read()) != -1) {
                 tempArray[index] = (char)unicode;
                 index = index + 1;
             }
-            
             text = new String(tempArray);
-            in.close();
-        } catch (IOException ioe) {
-            text = "File not found!";
+        } catch (IOException e) {
+            return null;
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return text;
     }
