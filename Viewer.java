@@ -41,9 +41,11 @@ public class Viewer {
     private JMenuBar createJMenuBar(Controller controller) {
         JMenu fileMenu = createFileMenu(controller);
         JMenu editMenu = createEditMenu(controller);
+	JMenu formatMenu = createFormatMenu(controller);
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
+	menuBar.add(formatMenu);
         return menuBar;
     }
 
@@ -142,7 +144,7 @@ public class Viewer {
         timeAndDateMenuItem.setActionCommand("Time_And_Date");
 
         JMenu editMenu = new JMenu("Edit");
-        editMenu.setMnemonic('F');
+        editMenu.setMnemonic('E');
         editMenu.add(undoMenuItem);
         editMenu.add(new JSeparator());
         editMenu.add(cutMenuItem);
@@ -158,5 +160,22 @@ public class Viewer {
         editMenu.add(selectAllMenuItem);
         editMenu.add(timeAndDateMenuItem);
         return editMenu;
+    }
+
+    private JMenu createFormatMenu(Controller controller) {
+    	JCheckBoxMenuItem checkBoxMenuItem = new JCheckBoxMenuItem("Word-wrap", new ImageIcon(""));
+        checkBoxMenuItem.addActionListener(controller);
+        checkBoxMenuItem.setActionCommand("word_wrap");
+
+        JMenuItem fontMenuItem = new JMenuItem("Fonts ...");
+        fontMenuItem.addActionListener(controller);
+        fontMenuItem.setActionCommand("Choose_font");
+
+        JMenu formatMenu = new JMenu("Format");
+        formatMenu.setMnemonic('m');
+        formatMenu.add(checkBoxMenuItem);
+        formatMenu.add(fontMenuItem);
+
+        return formatMenu;
     }
 }
