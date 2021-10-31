@@ -1,7 +1,7 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import utils.OpenFile;
+import utils.*;
 
 public class Controller implements ActionListener {
     
@@ -24,6 +24,13 @@ public class Controller implements ActionListener {
                     viewer.update(text);
                 }
                 break;
+
+            case "Printing_File":
+                PrintingFile pFile = new PrintingFile();
+                String text = viewer.getTextForPrinting();
+                pFile.printingFile(text);
+                break;
+
             case "Close_Program":
                 System.exit(1);
                 break;
