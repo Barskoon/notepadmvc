@@ -38,6 +38,10 @@ public class Viewer {
         return null;
     }
 
+    public String getTextForPrinting() {
+        return textArea.getText();
+    }
+
     private JMenuBar createJMenuBar(Controller controller) {
         JMenu fileMenu = createFileMenu(controller);
         JMenu editMenu = createEditMenu(controller);
@@ -55,7 +59,6 @@ public class Viewer {
         newMenuItem.addActionListener(controller);
         newMenuItem.setActionCommand("Create_New_Document");
 
-
         JMenuItem openMenuItem = new JMenuItem("Open", new ImageIcon("Pictures/images/open.gif"));
         openMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         openMenuItem.addActionListener(controller);
@@ -68,6 +71,8 @@ public class Viewer {
 
         JMenuItem printMenuItem = new JMenuItem("Print", new ImageIcon("Pictures/images/new.gif"));
         printMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
+        printMenuItem.addActionListener(controller);
+        printMenuItem.setActionCommand("Printing_File");
 
         JMenuItem closeMenuItem = new JMenuItem("Exit");
         closeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
