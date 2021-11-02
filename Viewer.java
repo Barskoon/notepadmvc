@@ -20,6 +20,8 @@ public class Viewer {
         textArea = new JTextArea();
         textArea.addCaretListener(controller);
         JScrollPane scrollPane = new JScrollPane(textArea);
+        TextLineNumber textLineNumber = new TextLineNumber(textArea);
+        scrollPane.setRowHeaderView(textLineNumber);
 
         JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         tabSize = new JLabel("");
