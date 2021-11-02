@@ -2,7 +2,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.io.File;
-import utils.OpenFile;
+import utils.*;
 
 public class Controller implements ActionListener, CaretListener {
     
@@ -25,6 +25,13 @@ public class Controller implements ActionListener, CaretListener {
                     viewer.update(text);
                 }
                 break;
+
+            case "Printing_File":
+                PrintingFile pFile = new PrintingFile();
+                String text = viewer.getTextForPrinting();
+                pFile.printingFile(text);
+                break;
+
             case "Close_Program":
                 System.exit(1);
                 break;
