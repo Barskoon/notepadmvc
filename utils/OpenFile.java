@@ -25,6 +25,8 @@ public class OpenFile {
             }
 
             text = new String(tempArray);
+            tempArray = null;
+            isr = null;
         } catch (IOException e) {
             return null;
         } finally {
