@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -7,6 +8,9 @@ public class Viewer {
 
     private JFrame frame;
     private JTextArea textArea;
+    private JLabel tabSize;
+    private JLabel caretPosition;
+    private JLabel symbolCount;
 
     public Viewer() {
         Controller controller = new Controller(this);
@@ -14,12 +18,25 @@ public class Viewer {
         JMenuBar menuBar = createJMenuBar(controller);
 
         textArea = new JTextArea();
+        textArea.addCaretListener(controller);
         JScrollPane scrollPane = new JScrollPane(textArea);
 
+        JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        tabSize = new JLabel("");
+        caretPosition = new JLabel("");
+        symbolCount = new JLabel("");
+
+        footerUpdate();
+        
+        footer.add(caretPosition);
+        footer.add(tabSize);
+        footer.add(symbolCount);
+        
         frame = new JFrame("Notepad MVC");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(scrollPane);
         frame.setJMenuBar(menuBar);
+        frame.add(scrollPane);
+        frame.add(footer, BorderLayout.SOUTH);
         frame.setSize(800, 600);
         frame.setLocation(500, 50);
         frame.setVisible(true);
@@ -38,14 +55,31 @@ public class Viewer {
         return null;
     }
 
+    public void footerUpdate() {
+        int row = 1;
+        int column = 1;
+        int caretPos = 1;
+        try {
+            caretPos = textArea.getCaretPosition();
+            row = textArea.getLineOfOffset(caretPos);
+            column = caretPos - textArea.getLineStartOffset(row);
+            row = row + 1;
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        caretPosition.setText("col: " + column + " | row: " + row);
+        tabSize.setText("| tab width: " + textArea.getTabSize());
+        symbolCount.setText("| symbols: " + caretPos);
+    }
+
     private JMenuBar createJMenuBar(Controller controller) {
         JMenu fileMenu = createFileMenu(controller);
         JMenu editMenu = createEditMenu(controller);
-	JMenu formatMenu = createFormatMenu(controller);
+    	JMenu formatMenu = createFormatMenu(controller);
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
-	menuBar.add(formatMenu);
+    	menuBar.add(formatMenu);
         return menuBar;
     }
 

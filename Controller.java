@@ -1,9 +1,10 @@
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
 import java.io.File;
 import utils.OpenFile;
 
-public class Controller implements ActionListener {
+public class Controller implements ActionListener, CaretListener {
     
     private Viewer viewer;
     
@@ -28,5 +29,9 @@ public class Controller implements ActionListener {
                 System.exit(1);
                 break;
         }
+    }
+
+    public void caretUpdate(CaretEvent caretEvent) {
+        viewer.footerUpdate();
     }
 }
