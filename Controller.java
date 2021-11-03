@@ -36,6 +36,9 @@ public class Controller implements ActionListener, CaretListener {
             case "Cancel_Find_Dialog":
                 viewer.closeFindDialog();
                 break;
+            case "Search":
+                viewer.search();
+                break;
 
             case "Close_Program":
                 System.exit(1);

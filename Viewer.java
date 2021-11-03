@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,7 +16,13 @@ public class Viewer {
     private JLabel symbolCount;
     private JPanel footer;
     private JDialog findDialog;
+    private JTextField textField;
 
+    private Highlighter hilit;
+    private Highlighter.HighlightPainter painter;
+    private Color entryBg;
+
+    private final Color HILIT_COLOR = Color.LIGHT_GRAY;
 
     public Viewer() {
         Controller controller = new Controller(this);
@@ -259,15 +267,23 @@ public class Viewer {
     public void showFindDialog(Controller controller){
         findDialog = new JDialog(frame, "Find");
 
+        hilit = new DefaultHighlighter();
+        painter = new DefaultHighlighter.DefaultHighlightPainter(HILIT_COLOR);
+        textArea.setHighlighter(hilit);
+
         Container contentPanel = findDialog.getContentPane();
         GroupLayout layout = new GroupLayout(contentPanel);
         contentPanel.setLayout(layout);
 
-        JTextField textField = new JTextField();
+        textField = new JTextField();
         JLabel label = new JLabel();
         label.setText("Enter text to search:");
 
+        entryBg = textField.getBackground();
+
         JButton findButton = new JButton("Search");
+        findButton.addActionListener(controller);
+        findButton.setActionCommand("Search");
 
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(controller);
@@ -331,5 +347,23 @@ public class Viewer {
 
     public void closeFindDialog(){
         findDialog.dispose();
+    }
+
+    public void search() {
+        hilit.removeAllHighlights();
+
+        String s = textArea.getText();
+        String content = textField.getText();
+        int index = content.indexOf(s, 0);
+        if (index >= 0) {
+            try {
+                int end = index + s.length();
+                hilit.addHighlight(index, end, painter);
+                textArea.setCaretPosition(end);
+                textField.setBackground(entryBg);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
