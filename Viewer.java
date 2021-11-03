@@ -87,6 +87,7 @@ public class Viewer {
         JMenu fileMenu = createFileMenu(controller);
         JMenu editMenu = createEditMenu(controller);
     	JMenu formatMenu = createFormatMenu(controller);
+    	JMenu viewMenu = createViewMenu(controller);
         JMenu faqMenu = createFaqMenu(controller);
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(fileMenu);
