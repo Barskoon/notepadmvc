@@ -254,4 +254,72 @@ public class Viewer {
         return viewMenu;
 
     }
+
+    public void showFindDialog(){
+        JDialog dialog = new JDialog(frame, "Find");
+
+        Container contentPanel = dialog.getContentPane();
+        GroupLayout layout = new GroupLayout(contentPanel);
+        contentPanel.setLayout(layout);
+
+        JTextField textField = new JTextField();
+        JLabel label = new JLabel();
+        label.setText("Enter text to search:");
+        JButton findButton = new JButton("Search");
+        JButton cancelButton = new JButton("Cancel");
+        JCheckBox caseCheckBox = new JCheckBox("Match case");
+        JCheckBox wrapCheckBox = new JCheckBox("Wrap around");
+        JRadioButton radioButtonUp = new JRadioButton("Find up");
+        JRadioButton radioButtonDown = new JRadioButton("Find down");
+
+        ButtonGroup group = new ButtonGroup();
+        group.add(radioButtonUp);
+        group.add(radioButtonDown);
+
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
+
+        layout.setHorizontalGroup(layout.createSequentialGroup()
+                .addComponent(label)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(textField)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(caseCheckBox)
+                                        .addComponent(radioButtonUp)
+                                )
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(wrapCheckBox)
+                                        .addComponent(radioButtonDown)
+                                ))
+
+                )
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(findButton)
+                        .addComponent(cancelButton))
+
+        );
+        layout.linkSize(SwingConstants.HORIZONTAL, findButton, cancelButton);
+
+        layout.setVerticalGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(label)
+                        .addComponent(textField)
+                        .addComponent(findButton))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(caseCheckBox)
+                                        .addComponent(wrapCheckBox)
+                                )
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(radioButtonUp)
+                                        .addComponent(radioButtonDown)
+                                ))
+                .addComponent(cancelButton))
+        );
+
+        dialog.setSize(550, 150);
+        dialog.setVisible(true);
+    }
 }

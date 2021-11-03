@@ -30,6 +30,9 @@ public class Controller implements ActionListener, CaretListener {
                 String text = viewer.getTextForPrinting();
                 pFile.printingFile(text);
                 break;
+            case "Find":
+                viewer.showFindDialog();
+                break;
 
             case "Close_Program":
                 System.exit(1);
