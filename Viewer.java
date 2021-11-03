@@ -13,6 +13,7 @@ public class Viewer {
     private JLabel caretPosition;
     private JLabel symbolCount;
     private JPanel footer;
+    private JDialog findDialog;
 
 
     public Viewer() {
@@ -255,18 +256,23 @@ public class Viewer {
 
     }
 
-    public void showFindDialog(){
-        JDialog dialog = new JDialog(frame, "Find");
+    public void showFindDialog(Controller controller){
+        findDialog = new JDialog(frame, "Find");
 
-        Container contentPanel = dialog.getContentPane();
+        Container contentPanel = findDialog.getContentPane();
         GroupLayout layout = new GroupLayout(contentPanel);
         contentPanel.setLayout(layout);
 
         JTextField textField = new JTextField();
         JLabel label = new JLabel();
         label.setText("Enter text to search:");
+
         JButton findButton = new JButton("Search");
+
         JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(controller);
+        cancelButton.setActionCommand("Cancel_Find_Dialog");
+
         JCheckBox caseCheckBox = new JCheckBox("Match case");
         JCheckBox wrapCheckBox = new JCheckBox("Wrap around");
         JRadioButton radioButtonUp = new JRadioButton("Find up");
@@ -319,7 +325,11 @@ public class Viewer {
                 .addComponent(cancelButton))
         );
 
-        dialog.setSize(550, 150);
-        dialog.setVisible(true);
+        findDialog.setSize(550, 150);
+        findDialog.setVisible(true);
+    }
+
+    public void closeFindDialog(){
+        findDialog.dispose();
     }
 }

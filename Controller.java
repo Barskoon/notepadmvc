@@ -31,7 +31,10 @@ public class Controller implements ActionListener, CaretListener {
                 pFile.printingFile(text);
                 break;
             case "Find":
-                viewer.showFindDialog();
+                viewer.showFindDialog(this);
+                break;
+            case "Cancel_Find_Dialog":
+                viewer.closeFindDialog();
                 break;
 
             case "Close_Program":
