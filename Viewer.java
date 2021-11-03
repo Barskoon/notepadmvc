@@ -1,8 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+
 import utils.TextLineNumber;
 
 public class Viewer {
@@ -12,6 +14,8 @@ public class Viewer {
     private JLabel tabSize;
     private JLabel caretPosition;
     private JLabel symbolCount;
+    private JPanel footer;
+
 
     public Viewer() {
         Controller controller = new Controller(this);
@@ -24,17 +28,19 @@ public class Viewer {
         TextLineNumber textLineNumber = new TextLineNumber(textArea);
         scrollPane.setRowHeaderView(textLineNumber);
 
-        JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
         tabSize = new JLabel("");
         caretPosition = new JLabel("");
         symbolCount = new JLabel("");
 
         footerUpdate();
-        
+
+
         footer.add(caretPosition);
         footer.add(tabSize);
         footer.add(symbolCount);
-        
+
         frame = new JFrame("Notepad MVC");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setJMenuBar(menuBar);
@@ -82,11 +88,13 @@ public class Viewer {
     private JMenuBar createJMenuBar(Controller controller) {
         JMenu fileMenu = createFileMenu(controller);
         JMenu editMenu = createEditMenu(controller);
-    	JMenu formatMenu = createFormatMenu(controller);
+        JMenu formatMenu = createFormatMenu(controller);
+        JMenu viewMenu = createViewMenu(controller);
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
-    	menuBar.add(formatMenu);
+        menuBar.add(formatMenu);
+        menuBar.add(viewMenu);
         return menuBar;
     }
 
@@ -205,7 +213,7 @@ public class Viewer {
     }
 
     private JMenu createFormatMenu(Controller controller) {
-    	JCheckBoxMenuItem checkBoxMenuItem = new JCheckBoxMenuItem("Word-wrap", new ImageIcon(""));
+        JCheckBoxMenuItem checkBoxMenuItem = new JCheckBoxMenuItem("Word-wrap", new ImageIcon(""));
         checkBoxMenuItem.addActionListener(controller);
         checkBoxMenuItem.setActionCommand("word_wrap");
 
@@ -219,5 +227,33 @@ public class Viewer {
         formatMenu.add(fontMenuItem);
 
         return formatMenu;
+    }
+
+    private JMenu createViewMenu(Controller controller) {
+        JCheckBoxMenuItem statusBarMenuItem = new JCheckBoxMenuItem("Status bar", true);
+        statusBarMenuItem.addActionListener(controller);
+        statusBarMenuItem.setActionCommand("Status_Bar");
+
+
+        ActionListener actionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                AbstractButton abstractButton = (AbstractButton) actionEvent.getSource();
+                boolean selected = abstractButton.getModel().isSelected();
+                if (selected) {
+                    footer.setVisible(true);
+                } else {
+                    footer.setVisible(false);
+                }
+            }
+        };
+
+        statusBarMenuItem.addActionListener(actionListener);
+        JMenu viewMenu = new JMenu("View");
+        viewMenu.setMnemonic(KeyEvent.VK_I);
+        viewMenu.add(statusBarMenuItem);
+
+        return viewMenu;
+
     }
 }
