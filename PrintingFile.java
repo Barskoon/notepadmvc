@@ -1,5 +1,3 @@
-package utils;
-
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import java.awt.Graphics;

@@ -5,8 +5,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 
-import utils.TextLineNumber;
-
 public class Viewer {
 
     private JFrame frame;

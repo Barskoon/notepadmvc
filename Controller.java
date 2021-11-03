@@ -2,7 +2,6 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.io.File;
-import utils.*;
 
 public class Controller implements ActionListener, CaretListener {
     
