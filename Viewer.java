@@ -86,23 +86,15 @@ public class Viewer {
     private JMenuBar createJMenuBar(Controller controller) {
         JMenu fileMenu = createFileMenu(controller);
         JMenu editMenu = createEditMenu(controller);
-<<<<<<< HEAD
     	JMenu formatMenu = createFormatMenu(controller);
         JMenu faqMenu = createFaqMenu(controller);
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
     	menuBar.add(formatMenu);
+    	menuBar.add(viewMenu);
         menuBar.add(faqMenu);
-=======
-        JMenu formatMenu = createFormatMenu(controller);
-        JMenu viewMenu = createViewMenu(controller);
-        JMenuBar menuBar = new JMenuBar();
-        menuBar.add(fileMenu);
-        menuBar.add(editMenu);
-        menuBar.add(formatMenu);
-        menuBar.add(viewMenu);
->>>>>>> origin/dev
+
         return menuBar;
     }
 
