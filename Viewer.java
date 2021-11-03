@@ -1,26 +1,92 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import utils.TextLineNumber;
 
 public class Viewer {
+
+    private JFrame frame;
+    private JTextArea textArea;
+    private JLabel tabSize;
+    private JLabel caretPosition;
+    private JLabel symbolCount;
+
     public Viewer() {
         Controller controller = new Controller(this);
 
         JMenuBar menuBar = createJMenuBar(controller);
 
-        JFrame frame = new JFrame("Notepad MVC");
+        textArea = new JTextArea();
+        textArea.addCaretListener(controller);
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        TextLineNumber textLineNumber = new TextLineNumber(textArea);
+        scrollPane.setRowHeaderView(textLineNumber);
+
+        JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        tabSize = new JLabel("");
+        caretPosition = new JLabel("");
+        symbolCount = new JLabel("");
+
+        footerUpdate();
+        
+        footer.add(caretPosition);
+        footer.add(tabSize);
+        footer.add(symbolCount);
+        
+        frame = new JFrame("Notepad MVC");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setJMenuBar(menuBar);
+        frame.add(scrollPane);
+        frame.add(footer, BorderLayout.SOUTH);
         frame.setSize(800, 600);
         frame.setLocation(500, 50);
         frame.setVisible(true);
     }
 
+    public void update(String value) {
+        textArea.setText(value);
+    }
+
+    public File getFile() {
+        JFileChooser fileChooser = new JFileChooser();
+        int answer = fileChooser.showOpenDialog(frame);
+        if (answer == 0) {
+            return fileChooser.getSelectedFile();
+        }
+        return null;
+    }
+
+    public void footerUpdate() {
+        int row = 1;
+        int column = 1;
+        int caretPos = 1;
+        try {
+            caretPos = textArea.getCaretPosition();
+            row = textArea.getLineOfOffset(caretPos);
+            column = caretPos - textArea.getLineStartOffset(row);
+            row = row + 1;
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        caretPosition.setText("col: " + column + " | row: " + row);
+        tabSize.setText("| tab width: " + textArea.getTabSize());
+        symbolCount.setText("| symbols: " + caretPos);
+    }
+
+    public String getTextForPrinting() {
+        return textArea.getText();
+    }
+
     private JMenuBar createJMenuBar(Controller controller) {
         JMenu fileMenu = createFileMenu(controller);
         JMenu editMenu = createEditMenu(controller);
+    	JMenu formatMenu = createFormatMenu(controller);
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
+    	menuBar.add(formatMenu);
         return menuBar;
     }
 
@@ -30,9 +96,10 @@ public class Viewer {
         newMenuItem.addActionListener(controller);
         newMenuItem.setActionCommand("Create_New_Document");
 
-
         JMenuItem openMenuItem = new JMenuItem("Open", new ImageIcon("Pictures/images/open.gif"));
         openMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+        openMenuItem.addActionListener(controller);
+        openMenuItem.setActionCommand("Open_File");
 
         JMenuItem saveMenuItem = new JMenuItem("Save", new ImageIcon("Pictures/images/save.gif"));
         saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
@@ -41,8 +108,11 @@ public class Viewer {
 
         JMenuItem printMenuItem = new JMenuItem("Print", new ImageIcon("Pictures/images/new.gif"));
         printMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
+        printMenuItem.addActionListener(controller);
+        printMenuItem.setActionCommand("Printing_File");
 
         JMenuItem closeMenuItem = new JMenuItem("Exit");
+        closeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
         closeMenuItem.addActionListener(controller);
         closeMenuItem.setActionCommand("Close_Program");
 
@@ -116,7 +186,7 @@ public class Viewer {
         timeAndDateMenuItem.setActionCommand("Time_And_Date");
 
         JMenu editMenu = new JMenu("Edit");
-        editMenu.setMnemonic('F');
+        editMenu.setMnemonic('E');
         editMenu.add(undoMenuItem);
         editMenu.add(new JSeparator());
         editMenu.add(cutMenuItem);
@@ -132,5 +202,22 @@ public class Viewer {
         editMenu.add(selectAllMenuItem);
         editMenu.add(timeAndDateMenuItem);
         return editMenu;
+    }
+
+    private JMenu createFormatMenu(Controller controller) {
+    	JCheckBoxMenuItem checkBoxMenuItem = new JCheckBoxMenuItem("Word-wrap", new ImageIcon(""));
+        checkBoxMenuItem.addActionListener(controller);
+        checkBoxMenuItem.setActionCommand("word_wrap");
+
+        JMenuItem fontMenuItem = new JMenuItem("Fonts ...");
+        fontMenuItem.addActionListener(controller);
+        fontMenuItem.setActionCommand("Choose_font");
+
+        JMenu formatMenu = new JMenu("Format");
+        formatMenu.setMnemonic('m');
+        formatMenu.add(checkBoxMenuItem);
+        formatMenu.add(fontMenuItem);
+
+        return formatMenu;
     }
 }
