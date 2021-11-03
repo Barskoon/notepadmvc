@@ -83,10 +83,12 @@ public class Viewer {
         JMenu fileMenu = createFileMenu(controller);
         JMenu editMenu = createEditMenu(controller);
     	JMenu formatMenu = createFormatMenu(controller);
+        JMenu faqMenu = createFaqMenu(controller);
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
     	menuBar.add(formatMenu);
+        menuBar.add(faqMenu);
         return menuBar;
     }
 
@@ -219,5 +221,22 @@ public class Viewer {
         formatMenu.add(fontMenuItem);
 
         return formatMenu;
+    }
+
+    private JMenu createFaqMenu(Controller controller) {
+        JMenuItem helpMenuItem = new JMenuItem("Help", new ImageIcon("Pictures/images/help.gif"));
+        helpMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
+        helpMenuItem.addActionListener(controller);
+        helpMenuItem.setActionCommand("Help");
+
+        JMenuItem aboutMenuItem = new JMenuItem("About", new ImageIcon("Pictures/images/about.gif"));
+        aboutMenuItem.addActionListener(controller);
+        aboutMenuItem.setActionCommand("About");
+
+        JMenu faqMenu = new JMenu("FAQ");
+        faqMenu.add(helpMenuItem);
+        faqMenu.add(aboutMenuItem);
+
+        return faqMenu;
     }
 }
