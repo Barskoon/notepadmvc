@@ -15,7 +15,7 @@ public class Controller implements ActionListener, CaretListener {
         String command = actionEvent.getActionCommand();
         switch (command) {
             case "Open_File":
-                OpenFile oFile = new OpenFile();
+                OpenFile oFile = new OpenFile(this.viewer);
                 File file = viewer.getFile();
                 if (file == null) {
                     return;
@@ -26,7 +26,7 @@ public class Controller implements ActionListener, CaretListener {
                 break;
 
             case "Printing_File":
-                PrintingFile pFile = new PrintingFile();
+                PrintingFile pFile = new PrintingFile(this.viewer);
                 String text = viewer.getTextForPrinting();
                 pFile.printingFile(text);
                 break;
@@ -34,6 +34,16 @@ public class Controller implements ActionListener, CaretListener {
             case "Close_Program":
                 System.exit(1);
                 break;
+
+            case "Find":
+                viewer.showFindDialog(this);
+                break;
+            case "Find_Word_Action":
+                FindUtil findUtil = new FindUtil(this.viewer);
+                findUtil.doTask();
+                break;
+            case "Cancel_Find_Dialog":
+                viewer.closeFindDialog();
         }
     }
 
