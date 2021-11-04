@@ -43,7 +43,7 @@ public class Controller implements ActionListener, CaretListener {
             } catch (IOException e) {
                 viewer.showMessage("Something went wrong! Please repeat the action!");
             }
-        } 
+        }
     }
  
     public void caretUpdate(CaretEvent caretEvent) {
