@@ -13,7 +13,7 @@ public class Controller implements ActionListener, CaretListener {
         this.viewer = viewer;
         initializeCommand();
     }
-
+ 
     private void initializeCommand() {
         if(map == null) {
             map = new HashMap<>();
