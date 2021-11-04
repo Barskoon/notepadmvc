@@ -236,7 +236,6 @@ public class Viewer {
 
     private JMenu createViewMenu(Controller controller) {
         JCheckBoxMenuItem statusBarMenuItem = new JCheckBoxMenuItem("Status bar", true);
-        statusBarMenuItem.addActionListener(controller);
         statusBarMenuItem.setActionCommand("Status_Bar");
 
 
