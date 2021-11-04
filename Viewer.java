@@ -93,6 +93,10 @@ public class Viewer {
         return textArea.getText();
     }
 
+    public void showMessage(String message) {
+        JOptionPane.showMessageDialog(frame, message);
+    }
+
     private JMenuBar createJMenuBar(Controller controller) {
         JMenu fileMenu = createFileMenu(controller);
         JMenu editMenu = createEditMenu(controller);
