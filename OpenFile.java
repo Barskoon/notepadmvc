@@ -9,7 +9,7 @@ public class OpenFile implements Task {
     private Viewer viewer;
     private String text;
     private FileInputStream fis;
- 
+	
     public OpenFile(Viewer viewer) {
         this.viewer = viewer;
         text = "";

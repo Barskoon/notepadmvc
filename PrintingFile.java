@@ -29,7 +29,7 @@ public class PrintingFile implements Task {
                 System.out.println("Print error!\n\n" + e);
         }
     }
-} 
+}
 
 class OutputPrinter implements Printable {
     private int currentPageIndex;

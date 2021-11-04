@@ -13,4 +13,4 @@ public class SelectAll implements Task {
             viewer.showMessage("Input text is empty!");
         }
     }
-} 
+}
