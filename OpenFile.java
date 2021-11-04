@@ -20,6 +20,7 @@ public class OpenFile implements Task {
         File file = viewer.getFile();
         if (file == null) {
             viewer.showMessage("File not found!");
+
         } else {
             try {
                 char[] tempArray = new char[(int)file.length()];
@@ -28,17 +29,16 @@ public class OpenFile implements Task {
 
                 int unicode;
                 int index = 0;
-                
+
                 while ((unicode = isr.read()) != -1) {
                     tempArray[index] = (char)unicode;
                     index = index + 1;
                 }
-
                 text = new String(tempArray);
-                tempArray = null;
-                isr = null;
+
             } catch (IOException e) {
                 viewer.showMessage("File not found!");
+
             } finally {
                 if (fis != null) {
                     try {
@@ -49,6 +49,7 @@ public class OpenFile implements Task {
                 }
             }
         }
-        viewer.update(text);
+
+        viewer.updateText(text);
     }
 }

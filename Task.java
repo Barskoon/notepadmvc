@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 public interface Task {
-    public void doTask();
+    void doTask() throws IOException;
 }
