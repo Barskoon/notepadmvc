@@ -11,9 +11,16 @@ import java.io.BufferedReader;
 import java.io.StringReader;
 import java.io.IOException;
 
-public class PrintingFile {
+public class PrintingFile implements Task {
 
-    public void printingFile(String textForPrinting) {
+    private Viewer viewer;
+
+    public PrintingFile(Viewer viewer) {
+        this.viewer = viewer;
+    }
+
+    public void doTask() {
+        String textForPrinting = viewer.getTextForPrinting();
         PrinterJob printing = PrinterJob.getPrinterJob();
         printing.setPrintable(new OutputPrinter(textForPrinting));
         PrintRequestAttributeSet attributeSet = new HashPrintRequestAttributeSet();

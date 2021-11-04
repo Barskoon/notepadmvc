@@ -92,16 +92,23 @@ public class Viewer {
         return textArea.getText();
     }
 
+    public void showMessage(String message) {
+        JOptionPane.showMessageDialog(frame, message);
+    }
+
     private JMenuBar createJMenuBar(Controller controller) {
         JMenu fileMenu = createFileMenu(controller);
         JMenu editMenu = createEditMenu(controller);
-        JMenu formatMenu = createFormatMenu(controller);
-        JMenu viewMenu = createViewMenu(controller);
+    	JMenu formatMenu = createFormatMenu(controller);
+    	JMenu viewMenu = createViewMenu(controller);
+        JMenu faqMenu = createFaqMenu(controller);
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
-        menuBar.add(formatMenu);
-        menuBar.add(viewMenu);
+    	menuBar.add(formatMenu);
+    	menuBar.add(viewMenu);
+        menuBar.add(faqMenu);
+
         return menuBar;
     }
 
@@ -238,7 +245,6 @@ public class Viewer {
 
     private JMenu createViewMenu(Controller controller) {
         JCheckBoxMenuItem statusBarMenuItem = new JCheckBoxMenuItem("Status bar", true);
-        statusBarMenuItem.addActionListener(controller);
         statusBarMenuItem.setActionCommand("Status_Bar");
 
 
@@ -262,6 +268,23 @@ public class Viewer {
 
         return viewMenu;
 
+    }
+
+    private JMenu createFaqMenu(Controller controller) {
+        JMenuItem helpMenuItem = new JMenuItem("Help", new ImageIcon("Pictures/images/help.gif"));
+        helpMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
+        helpMenuItem.addActionListener(controller);
+        helpMenuItem.setActionCommand("Help");
+
+        JMenuItem aboutMenuItem = new JMenuItem("About", new ImageIcon("Pictures/images/about.gif"));
+        aboutMenuItem.addActionListener(controller);
+        aboutMenuItem.setActionCommand("About");
+
+        JMenu faqMenu = new JMenu("FAQ");
+        faqMenu.add(helpMenuItem);
+        faqMenu.add(aboutMenuItem);
+
+        return faqMenu;
     }
 
     public void showFindDialog(Controller controller){
