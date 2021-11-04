@@ -45,7 +45,7 @@ public class Controller implements ActionListener, CaretListener {
             }
         }
     }
-
+ 
     public void caretUpdate(CaretEvent caretEvent) {
         viewer.footerUpdate();
     }

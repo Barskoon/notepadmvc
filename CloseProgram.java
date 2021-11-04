@@ -9,4 +9,4 @@ public class CloseProgram implements Task {
     public void doTask() {
         System.exit(1);
     }
-}
+} 

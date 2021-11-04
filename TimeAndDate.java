@@ -23,4 +23,4 @@ public class TimeAndDate implements Task {
         viewer.updateText(stringBuilder.toString());
         stringBuilder.setLength(0);
     }
-}
+} 
