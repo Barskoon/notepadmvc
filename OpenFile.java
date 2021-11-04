@@ -4,39 +4,51 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
-public class OpenFile {
-    String text = "";
-    FileInputStream fis = null;
+public class OpenFile implements Task {
 
-    public String openFile(File file) {
-        try {
-            char[] tempArray = new char[(int)file.length()];
-            fis = new FileInputStream(file);
-            InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+    private Viewer viewer;
+    private String text;
+    private FileInputStream fis;
 
-            int unicode;
-            int index = 0;
-            
-            while ((unicode = isr.read()) != -1) {
-                tempArray[index] = (char)unicode;
-                index = index + 1;
-            }
+    public OpenFile(Viewer viewer) {
+        this.viewer = viewer;
+        text = "";
+        fis = null;
+    }
 
-            text = new String(tempArray);
-            tempArray = null;
-            isr = null;
-        } catch (IOException e) {
-            return null;
-        } finally {
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+    public void doTask() {
+        File file = viewer.getFile();
+        if (file == null) {
+            viewer.showMessage("File not found!");
+        } else {
+            try {
+                char[] tempArray = new char[(int)file.length()];
+                fis = new FileInputStream(file);
+                InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+
+                int unicode;
+                int index = 0;
+                
+                while ((unicode = isr.read()) != -1) {
+                    tempArray[index] = (char)unicode;
+                    index = index + 1;
+                }
+
+                text = new String(tempArray);
+                tempArray = null;
+                isr = null;
+            } catch (IOException e) {
+                viewer.showMessage("File not found!");
+            } finally {
+                if (fis != null) {
+                    try {
+                        fis.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
-
-        return text;
+        viewer.update(text);
     }
 }

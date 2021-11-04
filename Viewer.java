@@ -83,6 +83,10 @@ public class Viewer {
         return textArea.getText();
     }
 
+    public void showMessage(String message) {
+        JOptionPane.showMessageDialog(frame, message);
+    }
+
     private JMenuBar createJMenuBar(Controller controller) {
         JMenu fileMenu = createFileMenu(controller);
         JMenu editMenu = createEditMenu(controller);
@@ -232,7 +236,6 @@ public class Viewer {
 
     private JMenu createViewMenu(Controller controller) {
         JCheckBoxMenuItem statusBarMenuItem = new JCheckBoxMenuItem("Status bar", true);
-        statusBarMenuItem.addActionListener(controller);
         statusBarMenuItem.setActionCommand("Status_Bar");
 
 
