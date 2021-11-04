@@ -1,5 +1,12 @@
 public class CloseProgram implements Task {
-    public void doTask(Viewer viewer) {
+
+    private Viewer viewer;
+
+    public CloseProgram(Viewer viewer) {
+        this.viewer = viewer;
+    }
+
+    public void doTask() {
         System.exit(1);
     }
 }

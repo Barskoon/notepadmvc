@@ -5,13 +5,21 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 public class OpenFile implements Task {
-    String text = "";
-    FileInputStream fis = null;
 
-    public void doTask(Viewer viewer) {
+    private Viewer viewer;
+    private String text;
+    private FileInputStream fis;
+
+    public OpenFile(Viewer viewer) {
+        this.viewer = viewer;
+        text = "";
+        fis = null;
+    }
+
+    public void doTask() {
         File file = viewer.getFile();
         if (file == null) {
-            viewer.update("file not found");
+            viewer.showMessage("File not found!");
         } else {
             try {
                 char[] tempArray = new char[(int)file.length()];
@@ -30,7 +38,7 @@ public class OpenFile implements Task {
                 tempArray = null;
                 isr = null;
             } catch (IOException e) {
-                return;
+                viewer.showMessage("File not found!");
             } finally {
                 if (fis != null) {
                     try {

@@ -13,7 +13,13 @@ import java.io.IOException;
 
 public class PrintingFile implements Task {
 
-    public void doTask(Viewer viewer) {
+    private Viewer viewer;
+
+    public PrintingFile(Viewer viewer) {
+        this.viewer = viewer;
+    }
+
+    public void doTask() {
         String textForPrinting = viewer.getTextForPrinting();
         PrinterJob printing = PrinterJob.getPrinterJob();
         printing.setPrintable(new OutputPrinter(textForPrinting));

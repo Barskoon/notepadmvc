@@ -7,23 +7,40 @@ import java.util.Map;
 
 public class Controller implements ActionListener, CaretListener {
 
-    Map<String, Task> map = new HashMap<String, Task>();
+    private Map<String, Task> map;
     private Viewer viewer;
     
     public Controller(Viewer viewer) {
         this.viewer = viewer;
-        map.put("Open_File", new OpenFile());
-        map.put("Printing_File", new PrintingFile());
-        map.put("Close_Program", new CloseProgram());
+        initializeCommand();
+    }
+
+    private void initializeCommand() {
+        if(map == null) {
+            map = new HashMap<String, Task>();
+        }
+        initializeCommand("Open_File", new OpenFile(viewer));
+        initializeCommand("Printing_File", new PrintingFile(viewer));
+        initializeCommand("Close_Program", new CloseProgram(viewer));
+    }
+
+    private boolean initializeCommand(String command, Task task) {
+        if(map != null) {
+            map.put(command, task);
+            return true;
+        }
+        return false;
     }
     
     public void actionPerformed(ActionEvent actionEvent) {
         String command = actionEvent.getActionCommand();
 
         if (map.containsKey(command)) {
-            map.get(command).doTask(viewer);
+            map.get(command).doTask();
+        } else {
+            viewer.showMessage("Bad action command!");
         }
-        
+
     }
 
     public void caretUpdate(CaretEvent caretEvent) {

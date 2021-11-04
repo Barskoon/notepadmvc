@@ -1,3 +1,3 @@
 public interface Task {
-    public void doTask(Viewer viewer);
+    public void doTask();
 }
