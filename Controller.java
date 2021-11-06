@@ -13,12 +13,13 @@ public class Controller implements ActionListener, CaretListener {
         this.viewer = viewer;
         initializeCommand();
     }
- 
+
     private void initializeCommand() {
         if(map == null) {
             map = new HashMap<>();
         }
 
+        initializeCommand("Create_New_Document", new NewFile(viewer));
         initializeCommand("Open_File", new OpenFile(viewer));
         initializeCommand("Printing_File", new PrintingFile(viewer));
         initializeCommand("Close_Program", new CloseProgram(viewer));
@@ -45,7 +46,7 @@ public class Controller implements ActionListener, CaretListener {
             }
         }
     }
- 
+
     public void caretUpdate(CaretEvent caretEvent) {
         viewer.footerUpdate();
     }
