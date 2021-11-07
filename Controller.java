@@ -21,6 +21,8 @@ public class Controller implements ActionListener, CaretListener {
 
         initializeCommand("Create_New_Document", new NewFile(viewer));
         initializeCommand("Open_File", new OpenFile(viewer));
+	initializeCommand("Save_File", new SaveFile(viewer));
+	initializeCommand("Save_As_File", new SaveFile(viewer));
         initializeCommand("Printing_File", new PrintingFile(viewer));
         initializeCommand("Close_Program", new CloseProgram(viewer));
         initializeCommand("Select_All", new SelectAll(viewer));

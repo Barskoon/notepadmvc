@@ -72,6 +72,28 @@ public class Viewer {
         return null;
     }
 
+    public File getFileForSaving() {
+        JFileChooser fileChooser = new JFileChooser();
+        int answer = fileChooser.showSaveDialog(frame);
+        if (answer == 0) {
+            return fileChooser.getSelectedFile();
+        }
+        return null;
+    }
+
+    public int getAnswer() {
+	Object[] options = {"Save", "Don't save", "Cancel"};
+	int n = JOptionPane.showOptionDialog(frame,
+    	    "Do you want to save the changes?",
+   	    "Notepad MVC",
+    	    JOptionPane.YES_NO_CANCEL_OPTION,
+    	    JOptionPane.QUESTION_MESSAGE,
+    	    null,
+    	    options,
+    	    options[2]);
+	return n;	
+    }
+
     public void footerUpdate() {
         int row = 1;
         int column = 1;
