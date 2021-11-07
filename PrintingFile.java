@@ -1,15 +1,10 @@
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.FontMetrics;
-import java.awt.print.PrinterJob;
-import java.awt.print.PrinterException;
-import java.awt.print.Printable;
-import java.awt.print.PageFormat;
+import java.awt.*;
+import java.awt.print.*;
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
 
 public class PrintingFile implements Task {
 
@@ -20,56 +15,85 @@ public class PrintingFile implements Task {
     }
 
     public void doTask() {
-        String textForPrinting = viewer.getTextForPrinting();
-        PrinterJob printing = PrinterJob.getPrinterJob();
-        printing.setPrintable(new OutputPrinter(textForPrinting));
-        PrintRequestAttributeSet attributeSet = new HashPrintRequestAttributeSet();
-        boolean doPrint = printing.printDialog(attributeSet);
+        try {
+            String textForPrinting = viewer.getInputText();
+            PrinterJob printing = PrinterJob.getPrinterJob();
+            PageFormat pageFormat = printing.pageDialog(printing.defaultPage());
+            printing.setPrintable(new OutputPrinter(textForPrinting, pageFormat));
 
-        if (doPrint) {
-            try {
+            if (printing.printDialog()) {
                 printing.print();
-            } catch (PrinterException e) {
-                System.out.println("Print error!\n\n" + e);
             }
+
+        } catch (PrinterException | IOException e) {
+                System.out.println("Print error!\n\n" + e);
+        }
+    }
+}
+
+class OutputPrinter implements Printable {
+    private int currentPageIndex;
+    private List<String> lineList;
+    private List<List<String>> pageList;
+    private List<String> page;
+    private List<String> currentPage;
+    private int fontSize;
+
+    OutputPrinter(String printData, PageFormat pageFormat) throws IOException {
+        fontSize = 12;
+        BufferedReader br = new BufferedReader(new StringReader(printData));
+        String line;
+        lineList = new ArrayList<>();
+        pageList = new ArrayList<>();
+        page = new ArrayList<>();
+
+        while ((line = br.readLine()) != null)
+            lineList.add(line);
+
+        br.close();
+        pageInit(pageFormat);
+    }
+
+    public void pageInit(PageFormat pageFormat) {
+        currentPageIndex = 0;
+        float y = fontSize;
+
+        for (String line : lineList) {
+            page.add(line);
+            y += fontSize;
+            if (y + fontSize * 2 > pageFormat.getImageableHeight()) {
+                y = 0;
+                pageList.add(page);
+                page = new ArrayList<>();
+            }
+        }
+
+        if (page.size() > 0)
+            pageList.add(page);
+    }
+
+    public void paintComponent(Graphics graphics) {
+        Graphics2D g2 = (Graphics2D) graphics;
+        currentPage = pageList.get(currentPageIndex);
+        int x = 0;
+        int y = fontSize;
+
+        for (String line : currentPage) {
+            if (line.length() > 0)
+                g2.drawString(line, x, y);
+            y += fontSize;
         }
     }
 
-    static class OutputPrinter implements Printable {
+    @Override
+    public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) {
+        if (pageIndex >= pageList.size())
+            return NO_SUCH_PAGE;
 
-        private final String printData;
-
-        public OutputPrinter(String printDataIn) {
-            this.printData = printDataIn;
-        }
-
-        @Override
-        public int print(Graphics g, PageFormat pf, int page) {
-            if (page > 0) {
-                return NO_SUCH_PAGE;
-            }
-
-            Graphics2D g2d = (Graphics2D)g;
-            int x = (int) pf.getImageableX();
-            int y = (int) pf.getImageableY();
-
-            FontMetrics metrics = g.getFontMetrics();
-            int lineHeight = metrics.getHeight();
-
-            BufferedReader br = new BufferedReader(new StringReader(printData));
-
-            try {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    y += lineHeight;
-                    g2d.drawString(line, x, y);
-                }
-
-            } catch (IOException e) {
-                System.out.println("Print error!\n\n" + e);
-            }
-
-            return PAGE_EXISTS;
-        }
+        currentPageIndex = pageIndex;
+        Graphics2D g2 = (Graphics2D) graphics;
+        g2.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
+        paintComponent(g2);
+        return PAGE_EXISTS;
     }
 }
