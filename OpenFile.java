@@ -20,6 +20,7 @@ public class OpenFile implements Task {
         File file = viewer.getFile();
         if (file == null) {
             viewer.showMessage("File not found!");
+	    viewer.setFileName(null);
 
         } else {
             try {
@@ -36,9 +37,11 @@ public class OpenFile implements Task {
                 }
                 text = new String(tempArray);
 		viewer.setFrameTitle(file);
+		viewer.setFileName(file);
 
             } catch (IOException e) {
                 viewer.showMessage("File not found!");
+		viewer.setFileName(null);
 
             } finally {
                 if (fis != null) {

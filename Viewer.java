@@ -14,6 +14,7 @@ public class Viewer {
     private JLabel symbolCount;
     private JPanel footer;
     private boolean b;
+    private File file;
 
     public Viewer() {
         Controller controller = new Controller(this);
@@ -49,7 +50,9 @@ public class Viewer {
         frame.setVisible(true);
 
 	b = false;
+	file = null;
     }
+
 
     public void setBool(boolean b) {
      	this.b = b;
@@ -61,6 +64,14 @@ public class Viewer {
 
     public void setFrameTitle(File fileName) {
 	frame.setTitle(fileName.getName() + " - Notepad MVC");
+    }
+
+    public void setFileName(File file) {
+     	this.file = file;
+    }
+  
+    public File getFileName() {
+     	return this.file;
     }
 
     public void showMessage(String message) {

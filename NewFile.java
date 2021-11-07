@@ -17,11 +17,13 @@ public class NewFile implements Task {
 	    if(n == 1) {
 	     	viewer.updateText("");
 	        viewer.setFrameTitle(new File("New"));
+		viewer.setFileName(null);
 	    }
 	    else if(n == 0) {
 	        saveFile.doTask();
 	        viewer.updateText("");
 		viewer.setFrameTitle(new File("New"));
+		viewer.setFileName(null);
 	    }
 	    else {
 	     	return;
@@ -30,6 +32,7 @@ public class NewFile implements Task {
 	else {
 	    viewer.updateText("");
 	    viewer.setFrameTitle(new File("New"));
+	    viewer.setFileName(null);
 	}
     }
 }
