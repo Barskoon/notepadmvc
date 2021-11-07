@@ -1,3 +1,5 @@
+import java.io.File;
+
 public class NewFile implements Task {
 
     private Viewer viewer;
@@ -9,17 +11,25 @@ public class NewFile implements Task {
     }
 
     public void doTask() {
-        if(!viewer.getInputText().equals("")) {
-	    int n = viewer.getAnswer();
+	int n;
+        if(!viewer.getInputText().equals("") && viewer.getBool()) {
+	    n = viewer.getAnswer();
 	    if(n == 1) {
 	     	viewer.updateText("");
+	        viewer.setFrameTitle(new File("New"));
 	    }
 	    else if(n == 0) {
 	        saveFile.doTask();
+	        viewer.updateText("");
+		viewer.setFrameTitle(new File("New"));
 	    }
 	    else {
 	     	return;
 	    }
+	}
+	else {
+	    viewer.updateText("");
+	    viewer.setFrameTitle(new File("New"));
 	}
     }
 }

@@ -13,6 +13,7 @@ public class Viewer {
     private JLabel caretPosition;
     private JLabel symbolCount;
     private JPanel footer;
+    private boolean b;
 
     public Viewer() {
         Controller controller = new Controller(this);
@@ -21,6 +22,7 @@ public class Viewer {
 
         textArea = new JTextArea();
         textArea.addCaretListener(controller);
+	textArea.getDocument().addDocumentListener(controller);
         JScrollPane scrollPane = new JScrollPane(textArea);
         TextLineNumber textLineNumber = new TextLineNumber(textArea);
         scrollPane.setRowHeaderView(textLineNumber);
@@ -37,7 +39,7 @@ public class Viewer {
         footer.add(tabSize);
         footer.add(symbolCount);
 
-        frame = new JFrame("Notepad MVC");
+        frame = new JFrame("New - Notepad MVC");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setJMenuBar(menuBar);
         frame.add(scrollPane);
@@ -45,6 +47,20 @@ public class Viewer {
         frame.setSize(800, 600);
         frame.setLocation(500, 50);
         frame.setVisible(true);
+
+	b = false;
+    }
+
+    public void setBool(boolean b) {
+     	this.b = b;
+    }
+
+    public boolean getBool() {
+     	return this.b;
+    }
+
+    public void setFrameTitle(File fileName) {
+	frame.setTitle(fileName.getName() + " - Notepad MVC");
     }
 
     public void showMessage(String message) {

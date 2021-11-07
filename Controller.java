@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.event.*;
 
-public class Controller implements ActionListener, CaretListener {
+public class Controller implements ActionListener, CaretListener, DocumentListener {
 
     private Map<String, Task> map;
     private Viewer viewer;
@@ -36,7 +36,22 @@ public class Controller implements ActionListener, CaretListener {
         }
         return false;
     }
+    
+    public void insertUpdate(DocumentEvent documentEvent) {
+	viewer.setBool(true);
+     	System.out.println("insert");
+    }
 
+    public void removeUpdate(DocumentEvent documentEvent) {
+	viewer.setBool(true);
+     	System.out.println("remove");
+    }
+
+    public void changedUpdate(DocumentEvent documentEvent) {
+     	//System.out.println("change");
+	//Plain text components don't fire these events.
+    }
+    
     public void actionPerformed(ActionEvent actionEvent) {
         String command = actionEvent.getActionCommand();
 

@@ -35,6 +35,7 @@ public class OpenFile implements Task {
                     index = index + 1;
                 }
                 text = new String(tempArray);
+		viewer.setFrameTitle(file);
 
             } catch (IOException e) {
                 viewer.showMessage("File not found!");
@@ -49,7 +50,7 @@ public class OpenFile implements Task {
                 }
             }
         }
-
         viewer.updateText(text);
+	viewer.setBool(false);
     }
 }

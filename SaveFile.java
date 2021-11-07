@@ -21,6 +21,7 @@ public class SaveFile implements Task {
 	    if(!textFromTextArea.equals("") && file != null){
 	    	try{
 	       	    saveText(textFromTextArea, file);
+		    viewer.setFrameTitle(file);
 	    	}
 	    	catch (IOException e) {
 	     	    e.printStackTrace();
