@@ -18,13 +18,14 @@ public class SaveAsFile implements Task {
 	File file = viewer.getFileForSaving();
 	File file1 = viewer.getFileName();
 	if(file != null) {
-	    if(file.exists() && file.isFile() && !file.isDirectory()) {
+	    if(file.exists()) {
 	    	viewer.setFileName(file);
 	    	int n = viewer.getAnswerConfirmReplace();	
 	    	if(n == 0) {
 	    	    try{
 	    	    	saveFile.saveText(textFromTextArea, file);
 		    	viewer.setFrameTitle(file);
+			viewer.setBool(false);
 	    	    }
 	    	    catch (IOException e) {
 	     	    	e.printStackTrace();
@@ -39,12 +40,12 @@ public class SaveAsFile implements Task {
 	    	    saveFile.saveText(textFromTextArea, file);
 		    viewer.setFrameTitle(file);	
 		    viewer.setFileName(file);
+		    viewer.setBool(false);
 	     	}	
 	    	catch (IOException e) {
 	     	    e.printStackTrace();
 	    	}	
 	    }  
 	}
-	viewer.setBool(false);
     } 	    	 	
 }

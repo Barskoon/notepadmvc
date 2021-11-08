@@ -54,18 +54,15 @@ public class Controller implements ActionListener, CaretListener, DocumentListen
     }
 
     public void insertUpdate(DocumentEvent documentEvent) {
-	viewer.setBool(true);
-     	System.out.println("insert");
+	viewer.setBool(true);        
     }
 
     public void removeUpdate(DocumentEvent documentEvent) {
-	viewer.setBool(true);
-     	System.out.println("remove");
+	viewer.setBool(true);        
     }
 
     public void changedUpdate(DocumentEvent documentEvent) {
-	viewer.setBool(true);
-     	System.out.println("change");
+	viewer.setBool(true);        
 	//Plain text components don't fire these events.
     }
 }

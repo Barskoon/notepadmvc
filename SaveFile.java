@@ -20,43 +20,34 @@ public class SaveFile implements Task {
 	    	if(file1.exists()) {
 		    viewer.setFileName(file1);                    
 	    	    int n = viewer.getAnswerConfirmReplace();	
-	    	    if(n == 0) {
-	    	    	try{
-	    	    	    saveText(textFromTextArea, file1);
-		    	    viewer.setFrameTitle(file1);
-		    	    viewer.setFileName(file1);
-	    	    	}
-	    	    	catch (IOException e) {
-	     	    	    e.printStackTrace();
-	    	    	}  
+	    	    if(n == 0) {	
+			saveTextWithTryCatch(textFromTextArea, file1); 
 	    	    }
 		    else {
 		    	viewer.setFileName(null);
 		    }   
 	    	}
  	        else {
-	    	    try{
-	       	    	saveText(textFromTextArea, file1);
-		    	viewer.setFrameTitle(file1);	
-		    	viewer.setFileName(file1);
-	     	    }	
-	    	    catch (IOException e) {
-	     	    	e.printStackTrace();
-	    	    }   
+		    saveTextWithTryCatch(textFromTextArea, file1); 
 	    	}
 	    }
 	}
-	else {                                         
-	    try{                                              
-	    	saveText(textFromTextArea, file);    	
-	    	viewer.setFrameTitle(file);
-		viewer.setFileName(file);
-	    }
-	    catch (IOException e) {
-	     	e.printStackTrace();
-	    }    
-	}	
-	viewer.setBool(false);	
+	else { 
+	    saveTextWithTryCatch(textFromTextArea, file);    
+	}		
+    }
+
+    private void saveTextWithTryCatch(String text, File file) {
+	try{
+	    saveText(text, file);
+ 	    viewer.setFrameTitle(file);
+	    viewer.setFileName(file);
+     	    viewer.setBool(false);
+	}
+	catch (IOException e) {
+	    e.printStackTrace();
+	}
+
     }
 
     public void saveText(String textFromTextArea, File fileName) 

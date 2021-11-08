@@ -11,24 +11,20 @@ public class NewFile implements Task {
     }
 
     public void doTask() {
-	int n;
         if(viewer.getBool() == true) {
-	    n = viewer.getAnswer();
-	    if(n == 1) {
-	     	viewer.updateText("");
-	        viewer.setFrameTitle(new File("New"));
-		viewer.setFileName(null);
-		viewer.setBool(false);
-	    }
-	    else if(n == 0) {
-	        saveFile.doTask();
-	        viewer.updateText("");
-		viewer.setFrameTitle(new File("New"));
-		viewer.setFileName(null);
-		viewer.setBool(false);
+	    if(viewer.getFileName() == null) {
+	    	if(viewer.getInputText().equals("")) {
+	    	    viewer.updateText("");
+	    	    viewer.setFrameTitle(new File("New"));
+	    	    viewer.setFileName(null);
+	    	    viewer.setBool(false);
+	    	}
+	   	else {
+	     	    startSaveOptionDialog();
+	    	}
 	    }
 	    else {
-	     	return;
+	    	startSaveOptionDialog();	
 	    }
 	}
 	else {
@@ -37,5 +33,25 @@ public class NewFile implements Task {
 	    viewer.setFileName(null);
 	    viewer.setBool(false);
 	}
+    }
+
+    private void startSaveOptionDialog() {
+    	int n = viewer.getAnswer();
+	if(n == 1) {
+	    viewer.updateText("");
+	    viewer.setFrameTitle(new File("New"));
+	    viewer.setFileName(null);
+	    viewer.setBool(false);
+	}
+	else if(n == 0) {
+	    saveFile.doTask(); 
+	    viewer.updateText("");    
+	    viewer.setFrameTitle(new File("New"));
+	    viewer.setFileName(null);
+	    viewer.setBool(false);
+	}
+	else {
+	    return;
+ 	}
     }
 }

@@ -13,7 +13,7 @@ public class Viewer {
     private JLabel caretPosition;
     private JLabel symbolCount;
     private JPanel footer;
-    private boolean b;
+    private boolean b;     
     private File file;
 
     public Viewer() {
@@ -52,10 +52,9 @@ public class Viewer {
         frame.setLocation(500, 50);
         frame.setVisible(true);
 
-	b = false;
+	b = false;     
 	file = null;
     }
-
 
     public void setBool(boolean b) {
      	this.b = b;
@@ -112,30 +111,22 @@ public class Viewer {
     }
 
     public int getAnswer() {
-	int n;
+	String temp = "Do you want to save the changes to \n";
 	if(this.getFileName() == null) {
-	    Object[] options = {"Save", "Don't save", "Cancel"};
-		n = JOptionPane.showOptionDialog(frame,
-    	    	"Do you want to save the changes to \nNew?",
-   	    	"Notepad MVC",
-    	    JOptionPane.YES_NO_CANCEL_OPTION,
-    	    JOptionPane.QUESTION_MESSAGE,
-    	    null,
-    	    options,
-    	    options[2]);
+	    temp = temp + "New?";
 	}
 	else {
-	    String fileName = this.getFileName().getPath();
-	    Object[] options = {"Save", "Don't save", "Cancel"};
-		n = JOptionPane.showOptionDialog(frame,
-    	    	"Do you want to save the changes to \n" + fileName + "?",
+	    temp = temp + this.getFileName().getPath() + "?";
+	}   
+	Object[] options = {"Save", "Don't save", "Cancel"};
+	int n = JOptionPane.showOptionDialog(frame,
+    	    	temp,
    	    	"Notepad MVC",
-    	    JOptionPane.YES_NO_CANCEL_OPTION,
-    	    JOptionPane.QUESTION_MESSAGE,
-    	    null,
-    	    options,
-    	    options[2]);
-	}    
+     	JOptionPane.YES_NO_CANCEL_OPTION,
+    	JOptionPane.QUESTION_MESSAGE,
+    	null,
+    	options,
+    	options[2]);   
 	return n;            	
     }
 
