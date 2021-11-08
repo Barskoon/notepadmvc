@@ -19,8 +19,8 @@ public class OpenFile implements Task {
     public void doTask() {
         File file = viewer.getFile();
         if (file == null) {
-            viewer.showMessage("File not found!");
-	    viewer.setFileName(null);
+            //viewer.showMessage("File not found!");
+            return;
 
         } else {
             try {

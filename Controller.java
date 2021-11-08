@@ -22,7 +22,7 @@ public class Controller implements ActionListener, CaretListener, DocumentListen
         initializeCommand("Create_New_Document", new NewFile(viewer));
         initializeCommand("Open_File", new OpenFile(viewer));
 	initializeCommand("Save_File", new SaveFile(viewer));
-	initializeCommand("Save_As_File", new SaveFile(viewer));
+	initializeCommand("Save_As_File", new SaveAsFile(viewer));
         initializeCommand("Printing_File", new PrintingFile(viewer));
         initializeCommand("Close_Program", new CloseProgram(viewer));
         initializeCommand("Select_All", new SelectAll(viewer));
@@ -35,21 +35,6 @@ public class Controller implements ActionListener, CaretListener, DocumentListen
             return true;
         }
         return false;
-    }
-    
-    public void insertUpdate(DocumentEvent documentEvent) {
-	viewer.setBool(true);
-     	System.out.println("insert");
-    }
-
-    public void removeUpdate(DocumentEvent documentEvent) {
-	viewer.setBool(true);
-     	System.out.println("remove");
-    }
-
-    public void changedUpdate(DocumentEvent documentEvent) {
-     	//System.out.println("change");
-	//Plain text components don't fire these events.
     }
     
     public void actionPerformed(ActionEvent actionEvent) {
@@ -66,5 +51,21 @@ public class Controller implements ActionListener, CaretListener, DocumentListen
 
     public void caretUpdate(CaretEvent caretEvent) {
         viewer.footerUpdate();
+    }
+
+    public void insertUpdate(DocumentEvent documentEvent) {
+	viewer.setBool(true);
+     	System.out.println("insert");
+    }
+
+    public void removeUpdate(DocumentEvent documentEvent) {
+	viewer.setBool(true);
+     	System.out.println("remove");
+    }
+
+    public void changedUpdate(DocumentEvent documentEvent) {
+	viewer.setBool(true);
+     	System.out.println("change");
+	//Plain text components don't fire these events.
     }
 }

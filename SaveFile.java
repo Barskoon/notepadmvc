@@ -11,32 +11,46 @@ public class SaveFile implements Task {
 	this.viewer = viewer;
     }
 
-    public void doTask() {
-	String textFromTextArea;
+    public void doTask() {                              
 	File file = viewer.getFileName();
-	if(file == null) {
-	    textFromTextArea = viewer.getInputText();
+	String textFromTextArea = viewer.getInputText();
+	if(file == null) {                             
 	    File file1 = viewer.getFileForSaving();
-	    if(file1 == null){
-	    	viewer.showMessage("File not saved!");
-	    }
-            else {
-	    	if(!textFromTextArea.equals("") && file1 != null){
+	    if(file1 != null) {
+	    	if(file1.exists()) {
+		    viewer.setFileName(file1);                    
+	    	    int n = viewer.getAnswerConfirmReplace();	
+	    	    if(n == 0) {
+	    	    	try{
+	    	    	    saveText(textFromTextArea, file1);
+		    	    viewer.setFrameTitle(file1);
+		    	    viewer.setFileName(file1);
+	    	    	}
+	    	    	catch (IOException e) {
+	     	    	    e.printStackTrace();
+	    	    	}  
+	    	    }
+		    else {
+		    	viewer.setFileName(null);
+		    }   
+	    	}
+ 	        else {
 	    	    try{
 	       	    	saveText(textFromTextArea, file1);
-		    	viewer.setFrameTitle(file1);
-	    	    }
+		    	viewer.setFrameTitle(file1);	
+		    	viewer.setFileName(file1);
+	     	    }	
 	    	    catch (IOException e) {
 	     	    	e.printStackTrace();
-	    	    }
-	        }
- 	    }
+	    	    }   
+	    	}
+	    }
 	}
-	else {
-	    textFromTextArea = viewer.getInputText();
+	else {                                         
 	    try{                                              
-	    	saveText(textFromTextArea, file);
+	    	saveText(textFromTextArea, file);    	
 	    	viewer.setFrameTitle(file);
+		viewer.setFileName(file);
 	    }
 	    catch (IOException e) {
 	     	e.printStackTrace();
@@ -45,7 +59,7 @@ public class SaveFile implements Task {
 	viewer.setBool(false);	
     }
 
-    private void saveText(String textFromTextArea, File fileName) 
+    public void saveText(String textFromTextArea, File fileName) 
 	throws IOException {
     	PrintWriter printWriter = null;
 
