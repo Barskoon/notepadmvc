@@ -205,7 +205,7 @@ public class Viewer {
         printMenuItem.addActionListener(controller);
         printMenuItem.setActionCommand("Printing_File");
 
-        JMenuItem closeMenuItem = new JMenuItem("Exit", new ImageIcon("Pictures/delete.png"));
+        JMenuItem closeMenuItem = new JMenuItem("Exit", new ImageIcon("Pictures/exit.png"));
         closeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
         closeMenuItem.addActionListener(controller);
         closeMenuItem.setActionCommand("Close_Program");
@@ -224,7 +224,7 @@ public class Viewer {
     }
 
     private JMenu createEditMenu(Controller controller) {
-        JMenuItem undoMenuItem = new JMenuItem("Undo", new ImageIcon("Pictures/back.png"));
+        JMenuItem undoMenuItem = new JMenuItem("Undo", new ImageIcon("Pictures/undo.png"));
         undoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
         undoMenuItem.addActionListener(controller);
         undoMenuItem.setActionCommand("Undo");
@@ -269,7 +269,7 @@ public class Viewer {
         gotoMenuItem.addActionListener(controller);
         gotoMenuItem.setActionCommand("Go_To");
 
-        JMenuItem selectAllMenuItem = new JMenuItem("Select all", new ImageIcon("Pictures/font.png"));
+        JMenuItem selectAllMenuItem = new JMenuItem("Select all", new ImageIcon("Pictures/marker.png"));
         selectAllMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
         selectAllMenuItem.addActionListener(controller);
         selectAllMenuItem.setActionCommand("Select_All");
@@ -299,11 +299,11 @@ public class Viewer {
     }
 
     private JMenu createFormatMenu(Controller controller) {
-        JCheckBoxMenuItem checkBoxMenuItem = new JCheckBoxMenuItem("Word-wrap", new ImageIcon("Pictures/go.png"), true);
+        JCheckBoxMenuItem checkBoxMenuItem = new JCheckBoxMenuItem("Word-wrap", new ImageIcon("Pictures/wrap.png"), true);
         checkBoxMenuItem.addActionListener(controller);
         checkBoxMenuItem.setActionCommand("word_wrap");
 
-        JMenuItem fontMenuItem = new JMenuItem("Fonts", new ImageIcon("Pictures/color.png"));
+        JMenuItem fontMenuItem = new JMenuItem("Fonts", new ImageIcon("Pictures/font.png"));
         fontMenuItem.addActionListener(controller);
         fontMenuItem.setActionCommand("Choose_font");
 
@@ -316,7 +316,7 @@ public class Viewer {
     }
 
     private JMenu createViewMenu(Controller controller) {
-        JCheckBoxMenuItem statusBarMenuItem = new JCheckBoxMenuItem("Status bar", new ImageIcon("Pictures/options.png"), true);
+        JCheckBoxMenuItem statusBarMenuItem = new JCheckBoxMenuItem("Status bar", new ImageIcon("Pictures/showCross.png"), true);
         statusBarMenuItem.addActionListener(controller);
         statusBarMenuItem.setActionCommand("Status_Bar");
 
@@ -339,12 +339,12 @@ public class Viewer {
     }
 
     private JMenu createFaqMenu(Controller controller) {
-        JMenuItem helpMenuItem = new JMenuItem("Help", new ImageIcon("Pictures/findMore.png"));
+        JMenuItem helpMenuItem = new JMenuItem("Help", new ImageIcon("Pictures/help.png"));
         helpMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
         helpMenuItem.addActionListener(controller);
         helpMenuItem.setActionCommand("Help");
 
-        JMenuItem aboutMenuItem = new JMenuItem("About", new ImageIcon("Pictures/marker.png"));
+        JMenuItem aboutMenuItem = new JMenuItem("About", new ImageIcon("Pictures/info.png"));
         aboutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
         aboutMenuItem.addActionListener(controller);
         aboutMenuItem.setActionCommand("About");
