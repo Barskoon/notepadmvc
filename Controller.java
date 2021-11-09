@@ -25,6 +25,9 @@ public class Controller implements ActionListener, CaretListener {
         initializeCommand("Close_Program", new CloseProgram(viewer));
         initializeCommand("Select_All", new SelectAll(viewer));
         initializeCommand("Time_And_Date", new TimeAndDate(viewer));
+        initializeCommand("Open_Find_Dialog", new OpenFindDialog(viewer, this));
+        initializeCommand("Find_Word_Button", new FindWordsOccurrences(viewer));
+        initializeCommand("Cancel_Find_Dialog", new CancelFindDialog(viewer));
     }
 
     private boolean initializeCommand(String command, Task task) {

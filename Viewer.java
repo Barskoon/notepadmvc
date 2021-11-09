@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 import java.awt.*;
@@ -68,13 +69,6 @@ public class Viewer {
         textArea.setText(value);
     }
 
-    public JTextArea getTextArea() {
-        return textArea;
-    }
-
-    public JTextField getInputSearchField() {
-        return inputSearchField;
-    }
 
     public void selectAllText() {
         textArea.selectAll();
@@ -202,7 +196,7 @@ public class Viewer {
         JMenuItem findMenuItem = new JMenuItem("Find", new ImageIcon("Pictures/find.png"));
         findMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
         findMenuItem.addActionListener(controller);
-        findMenuItem.setActionCommand("Find");
+        findMenuItem.setActionCommand("Open_Find_Dialog");
 
         JMenuItem findNextMenuItem = new JMenuItem("Find next", new ImageIcon("Pictures/findMore.png"));
         findNextMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0));
@@ -320,7 +314,7 @@ public class Viewer {
 
         JButton findButton = new JButton("Search");
         findButton.addActionListener(controller);
-        findButton.setActionCommand("Find_Word_Action");
+        findButton.setActionCommand("Find_Word_Button");
 
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(controller);
@@ -386,17 +380,20 @@ public class Viewer {
         findDialog.dispose();
     }
 
-    public Highlighter getHilit() {
-        return hilit;
+    public void setHilitFindingWord(int startIndex, int endIndex) throws BadLocationException{
+        hilit.addHighlight(startIndex, endIndex, painter);
     }
 
-    public Highlighter.HighlightPainter getPainter() {
-        return painter;
+    public String getInputSearchField() {
+        return inputSearchField.getText();
     }
 
-    public Color getEntryBg() {
-        return entryBg;
+    public void removeHilits(){
+        hilit.removeAllHighlights();
     }
 
+    public void setFindWordBackGround(){
+        inputSearchField.setBackground(entryBg);
+    }
 
 }
