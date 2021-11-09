@@ -7,19 +7,55 @@ import java.nio.charset.StandardCharsets;
 public class OpenFile implements Task {
 
     private Viewer viewer;
+    private SaveFile saveFile;
     private String text;
     private FileInputStream fis;
 	
     public OpenFile(Viewer viewer) {
         this.viewer = viewer;
+	saveFile = new SaveFile(viewer);
         text = "";
         fis = null;
     }
 
     public void doTask() {
-        File file = viewer.getFile();
-        if (file == null) {
-            viewer.showMessage("File not found!");
+	System.out.println(viewer.getBool());
+    	if(viewer.getBool() == true) {
+            if(viewer.getFileName() == null) {
+		if(viewer.getInputText().equals("")) {
+		    openFileMethod();
+		}
+       	        else {
+       	            startSaveOptionDialog();
+		}
+	    }
+	    else {
+	    	startSaveOptionDialog();
+	    }
+	}
+	else {
+	    openFileMethod();
+	}	    
+    }
+
+    private void startSaveOptionDialog() {
+    	int n = viewer.getAnswer();
+	if(n == 1) {
+	    openFileMethod();
+	}
+	else if(n == 0) {
+	    saveFile.doTask();
+	    openFileMethod();
+	}
+	else {
+	    return;
+	}
+    }
+
+    private void openFileMethod() {
+      	File file = viewer.getFile();
+        if (file == null) {                         
+            return;
 
         } else {
             try {
@@ -35,9 +71,12 @@ public class OpenFile implements Task {
                     index = index + 1;
                 }
                 text = new String(tempArray);
+		viewer.setFrameTitle(file);
+		viewer.setFileName(file);
 
             } catch (IOException e) {
                 viewer.showMessage("File not found!");
+		viewer.setFileName(null);
 
             } finally {
                 if (fis != null) {
@@ -49,7 +88,7 @@ public class OpenFile implements Task {
                 }
             }
         }
-
         viewer.updateText(text);
+	viewer.setBool(false);
     }
 }
