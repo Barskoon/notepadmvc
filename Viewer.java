@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
-
+ 
 public class Viewer {
 
     private JFrame frame;
@@ -13,7 +13,8 @@ public class Viewer {
     private JLabel caretPosition;
     private JLabel symbolCount;
     private JPanel footer;
-
+    private boolean b;     
+    private File file;
 
     public Viewer() {
         Controller controller = new Controller(this);
@@ -22,6 +23,7 @@ public class Viewer {
 
         textArea = new JTextArea();
         textArea.addCaretListener(controller);
+	textArea.getDocument().addDocumentListener(controller);
         JScrollPane scrollPane = new JScrollPane(textArea);
         TextLineNumber textLineNumber = new TextLineNumber(textArea);
         scrollPane.setRowHeaderView(textLineNumber);
@@ -34,23 +36,60 @@ public class Viewer {
 
         footerUpdate();
 
-
         footer.add(caretPosition);
         footer.add(tabSize);
         footer.add(symbolCount);
 
-        frame = new JFrame("Notepad MVC");
+	ImageIcon logo = new ImageIcon("Pictures/logo.png");
+
+        frame = new JFrame("New - Notepad MVC");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	frame.setIconImage(logo.getImage());
         frame.setJMenuBar(menuBar);
         frame.add(scrollPane);
         frame.add(footer, BorderLayout.SOUTH);
         frame.setSize(800, 600);
         frame.setLocation(500, 50);
         frame.setVisible(true);
+
+	b = false;     
+	file = null;
     }
 
-    public void update(String value) {
+    public void setBool(boolean b) {
+     	this.b = b;
+    }
+
+    public boolean getBool() {
+     	return this.b;
+    }
+
+    public void setFrameTitle(File fileName) {
+	frame.setTitle(fileName.getName() + " - Notepad MVC");
+    }
+
+    public void setFileName(File file) {
+     	this.file = file;
+    }
+  
+    public File getFileName() {
+     	return this.file;
+    }
+
+    public void showMessage(String message) {
+        JOptionPane.showMessageDialog(frame, message);
+    }
+
+    public void updateText(String value) {
         textArea.setText(value);
+    }
+
+    public void selectAllText() {
+        textArea.selectAll();
+    }
+
+    public int getCursorPosition() {
+        return textArea.getCaretPosition();
     }
 
     public File getFile() {
@@ -60,6 +99,48 @@ public class Viewer {
             return fileChooser.getSelectedFile();
         }
         return null;
+    }
+
+    public File getFileForSaving() {
+        JFileChooser fileChooser = new JFileChooser();
+        int answer = fileChooser.showSaveDialog(frame);
+        if (answer == 0) {
+            return fileChooser.getSelectedFile();
+        }
+        return null;
+    }
+
+    public int getAnswer() {
+	String temp = "Do you want to save the changes to \n";
+	if(this.getFileName() == null) {
+	    temp = temp + "New?";
+	}
+	else {
+	    temp = temp + this.getFileName().getPath() + "?";
+	}   
+	Object[] options = {"Save", "Don't save", "Cancel"};
+	int n = JOptionPane.showOptionDialog(frame,
+    	    	temp,
+   	    	"Notepad MVC",
+     	JOptionPane.YES_NO_CANCEL_OPTION,
+    	JOptionPane.QUESTION_MESSAGE,
+    	null,
+    	options,
+    	options[2]);   
+	return n;            	
+    }
+
+    public int getAnswerConfirmReplace() {                     
+     	Object[] options = {"Yes", "No"};
+	int n = JOptionPane.showOptionDialog(frame,
+    	    "Do you want to replace\n" + this.getFileName().getName() + "?",
+            "Notepad MVC",
+    	    JOptionPane.YES_NO_OPTION,
+    	    JOptionPane.QUESTION_MESSAGE,
+    	    null,     //do not use a custom Icon
+    	    options,  //the titles of buttons
+    	    options[0]); //default button title
+	return n;
     }
 
     public void footerUpdate() {
@@ -79,48 +160,52 @@ public class Viewer {
         symbolCount.setText("| symbols: " + caretPos);
     }
 
-    public String getTextForPrinting() {
+    public String getInputText() {
         return textArea.getText();
     }
 
     private JMenuBar createJMenuBar(Controller controller) {
         JMenu fileMenu = createFileMenu(controller);
         JMenu editMenu = createEditMenu(controller);
-    	JMenu formatMenu = createFormatMenu(controller);
-    	JMenu viewMenu = createViewMenu(controller);
+        JMenu formatMenu = createFormatMenu(controller);
+        JMenu viewMenu = createViewMenu(controller);
         JMenu faqMenu = createFaqMenu(controller);
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
-    	menuBar.add(formatMenu);
-    	menuBar.add(viewMenu);
+        menuBar.add(formatMenu);
+        menuBar.add(viewMenu);
         menuBar.add(faqMenu);
-
         return menuBar;
     }
 
     private JMenu createFileMenu(Controller controller) {
-        JMenuItem newMenuItem = new JMenuItem("New", new ImageIcon("Pictures/images/new.gif"));
+        JMenuItem newMenuItem = new JMenuItem("New", new ImageIcon("Pictures/new.png"));
         newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
         newMenuItem.addActionListener(controller);
         newMenuItem.setActionCommand("Create_New_Document");
 
-        JMenuItem openMenuItem = new JMenuItem("Open", new ImageIcon("Pictures/images/open.gif"));
+        JMenuItem openMenuItem = new JMenuItem("Open", new ImageIcon("Pictures/open.png"));
         openMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         openMenuItem.addActionListener(controller);
         openMenuItem.setActionCommand("Open_File");
 
-        JMenuItem saveMenuItem = new JMenuItem("Save", new ImageIcon("Pictures/images/save.gif"));
+        JMenuItem saveMenuItem = new JMenuItem("Save", new ImageIcon("Pictures/save.png"));
         saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+        saveMenuItem.addActionListener(controller);
+        saveMenuItem.setActionCommand("Save_File");
 
-        JMenuItem saveAsMenuItem = new JMenuItem("Save As", new ImageIcon("Pictures/images/save_as.gif"));
+        JMenuItem saveAsMenuItem = new JMenuItem("Save As", new ImageIcon("Pictures/save_as.png"));
+        saveAsMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.SHIFT_MASK));
+        saveAsMenuItem.addActionListener(controller);
+        saveAsMenuItem.setActionCommand("Save_As_File");
 
-        JMenuItem printMenuItem = new JMenuItem("Print", new ImageIcon("Pictures/images/new.gif"));
+        JMenuItem printMenuItem = new JMenuItem("Print", new ImageIcon("Pictures/print.png"));
         printMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
         printMenuItem.addActionListener(controller);
         printMenuItem.setActionCommand("Printing_File");
 
-        JMenuItem closeMenuItem = new JMenuItem("Exit");
+        JMenuItem closeMenuItem = new JMenuItem("Exit", new ImageIcon("Pictures/exit.png"));
         closeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
         closeMenuItem.addActionListener(controller);
         closeMenuItem.setActionCommand("Close_Program");
@@ -139,57 +224,57 @@ public class Viewer {
     }
 
     private JMenu createEditMenu(Controller controller) {
-        JMenuItem undoMenuItem = new JMenuItem("Undo", new ImageIcon("Pictures/images/cancel.gif"));
+        JMenuItem undoMenuItem = new JMenuItem("Undo", new ImageIcon("Pictures/undo.png"));
         undoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
         undoMenuItem.addActionListener(controller);
         undoMenuItem.setActionCommand("Undo");
 
-        JMenuItem cutMenuItem = new JMenuItem("Cut", new ImageIcon("Pictures/images/cut.gif"));
+        JMenuItem cutMenuItem = new JMenuItem("Cut", new ImageIcon("Pictures/cut.png"));
         cutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
         cutMenuItem.addActionListener(controller);
         cutMenuItem.setActionCommand("Cut");
 
-        JMenuItem copyMenuItem = new JMenuItem("Copy", new ImageIcon("Pictures/images/copy.gif"));
+        JMenuItem copyMenuItem = new JMenuItem("Copy", new ImageIcon("Pictures/copy.png"));
         copyMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
         copyMenuItem.addActionListener(controller);
         copyMenuItem.setActionCommand("Copy");
 
-        JMenuItem pasteMenuItem = new JMenuItem("Paste", new ImageIcon("Pictures/images/paste.gif"));
+        JMenuItem pasteMenuItem = new JMenuItem("Paste", new ImageIcon("Pictures/past.png"));
         pasteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
         pasteMenuItem.addActionListener(controller);
         pasteMenuItem.setActionCommand("Paste");
 
-        JMenuItem removeMenuItem = new JMenuItem("Remove", new ImageIcon("Pictures/images/remove.gif"));
+        JMenuItem removeMenuItem = new JMenuItem("Remove", new ImageIcon("Pictures/delete.png"));
         removeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
         removeMenuItem.addActionListener(controller);
         removeMenuItem.setActionCommand("Remove");
 
-        JMenuItem findMenuItem = new JMenuItem("Find", new ImageIcon("Pictures/images/find.gif"));
+        JMenuItem findMenuItem = new JMenuItem("Find", new ImageIcon("Pictures/find.png"));
         findMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
         findMenuItem.addActionListener(controller);
         findMenuItem.setActionCommand("Find");
 
-        JMenuItem findNextMenuItem = new JMenuItem("Find next", new ImageIcon("Pictures/images/findNext.gif"));
+        JMenuItem findNextMenuItem = new JMenuItem("Find next", new ImageIcon("Pictures/findMore.png"));
         findNextMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0));
         findNextMenuItem.addActionListener(controller);
         findNextMenuItem.setActionCommand("Find_Next");
 
-        JMenuItem replaceMenuItem = new JMenuItem("Replace", new ImageIcon("Pictures/images/replace.gif"));
+        JMenuItem replaceMenuItem = new JMenuItem("Replace", new ImageIcon("Pictures/change.png"));
         replaceMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK));
         replaceMenuItem.addActionListener(controller);
         replaceMenuItem.setActionCommand("Replace");
 
-        JMenuItem gotoMenuItem = new JMenuItem("Go to", new ImageIcon("Pictures/images/goTo.gif"));
+        JMenuItem gotoMenuItem = new JMenuItem("Go to", new ImageIcon("Pictures/go.png"));
         gotoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, ActionEvent.CTRL_MASK));
         gotoMenuItem.addActionListener(controller);
         gotoMenuItem.setActionCommand("Go_To");
 
-        JMenuItem selectAllMenuItem = new JMenuItem("Select all", new ImageIcon("Pictures/images/selectAll.gif"));
+        JMenuItem selectAllMenuItem = new JMenuItem("Select all", new ImageIcon("Pictures/marker.png"));
         selectAllMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
         selectAllMenuItem.addActionListener(controller);
         selectAllMenuItem.setActionCommand("Select_All");
 
-        JMenuItem timeAndDateMenuItem = new JMenuItem("Time and date", new ImageIcon("Pictures/images/timeAndDate.gif"));
+        JMenuItem timeAndDateMenuItem = new JMenuItem("Time and date", new ImageIcon("Pictures/time.png"));
         timeAndDateMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
         timeAndDateMenuItem.addActionListener(controller);
         timeAndDateMenuItem.setActionCommand("Time_And_Date");
@@ -214,11 +299,11 @@ public class Viewer {
     }
 
     private JMenu createFormatMenu(Controller controller) {
-        JCheckBoxMenuItem checkBoxMenuItem = new JCheckBoxMenuItem("Word-wrap", new ImageIcon(""));
+        JCheckBoxMenuItem checkBoxMenuItem = new JCheckBoxMenuItem("Word-wrap", new ImageIcon("Pictures/wrap.png"), true);
         checkBoxMenuItem.addActionListener(controller);
         checkBoxMenuItem.setActionCommand("word_wrap");
 
-        JMenuItem fontMenuItem = new JMenuItem("Fonts ...");
+        JMenuItem fontMenuItem = new JMenuItem("Fonts", new ImageIcon("Pictures/font.png"));
         fontMenuItem.addActionListener(controller);
         fontMenuItem.setActionCommand("Choose_font");
 
@@ -231,21 +316,17 @@ public class Viewer {
     }
 
     private JMenu createViewMenu(Controller controller) {
-        JCheckBoxMenuItem statusBarMenuItem = new JCheckBoxMenuItem("Status bar", true);
+        JCheckBoxMenuItem statusBarMenuItem = new JCheckBoxMenuItem("Status bar", new ImageIcon("Pictures/showCross.png"), true);
         statusBarMenuItem.addActionListener(controller);
         statusBarMenuItem.setActionCommand("Status_Bar");
 
-
-        ActionListener actionListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                AbstractButton abstractButton = (AbstractButton) actionEvent.getSource();
-                boolean selected = abstractButton.getModel().isSelected();
-                if (selected) {
-                    footer.setVisible(true);
-                } else {
-                    footer.setVisible(false);
-                }
+        ActionListener actionListener = actionEvent -> {
+            AbstractButton abstractButton = (AbstractButton) actionEvent.getSource();
+            boolean selected = abstractButton.getModel().isSelected();
+            if (selected) {
+                footer.setVisible(true);
+            } else {
+                footer.setVisible(false);
             }
         };
 
@@ -255,16 +336,16 @@ public class Viewer {
         viewMenu.add(statusBarMenuItem);
 
         return viewMenu;
-
     }
 
     private JMenu createFaqMenu(Controller controller) {
-        JMenuItem helpMenuItem = new JMenuItem("Help", new ImageIcon("Pictures/images/help.gif"));
+        JMenuItem helpMenuItem = new JMenuItem("Help", new ImageIcon("Pictures/help.png"));
         helpMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
         helpMenuItem.addActionListener(controller);
         helpMenuItem.setActionCommand("Help");
 
-        JMenuItem aboutMenuItem = new JMenuItem("About", new ImageIcon("Pictures/images/about.gif"));
+        JMenuItem aboutMenuItem = new JMenuItem("About", new ImageIcon("Pictures/info.png"));
+        aboutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
         aboutMenuItem.addActionListener(controller);
         aboutMenuItem.setActionCommand("About");
 
