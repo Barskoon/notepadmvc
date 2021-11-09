@@ -23,8 +23,8 @@ public class Viewer {
 
         textArea = new JTextArea();
         textArea.addCaretListener(controller);
-	    textArea.getDocument().addDocumentListener(controller);
-	    textArea.setLineWrap(true);
+        textArea.getDocument().addDocumentListener(controller);
+        textArea.setLineWrap(true);
         JScrollPane scrollPane = new JScrollPane(textArea);
         TextLineNumber textLineNumber = new TextLineNumber(textArea);
         scrollPane.setRowHeaderView(textLineNumber);
