@@ -314,7 +314,7 @@ public class Viewer {
         JMenu formatMenu = new JMenu("Format");
         formatMenu.setMnemonic('m');
         formatMenu.add(checkBoxMenuItem);
-        formatMenu.add(fontMenuItem);git
+        formatMenu.add(fontMenuItem);
 
         return formatMenu;
     }
