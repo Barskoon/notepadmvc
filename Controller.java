@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.event.*;
 
-public class Controller implements ActionListener, CaretListener {
+public class Controller implements ActionListener, CaretListener, DocumentListener {
 
     private Map<String, Task> map;
     private Viewer viewer;
@@ -21,6 +21,8 @@ public class Controller implements ActionListener, CaretListener {
 
         initializeCommand("Create_New_Document", new NewFile(viewer));
         initializeCommand("Open_File", new OpenFile(viewer));
+	initializeCommand("Save_File", new SaveFile(viewer));
+	initializeCommand("Save_As_File", new SaveAsFile(viewer));
         initializeCommand("Printing_File", new PrintingFile(viewer));
         initializeCommand("Close_Program", new CloseProgram(viewer));
         initializeCommand("Select_All", new SelectAll(viewer));
@@ -34,7 +36,7 @@ public class Controller implements ActionListener, CaretListener {
         }
         return false;
     }
-
+    
     public void actionPerformed(ActionEvent actionEvent) {
         String command = actionEvent.getActionCommand();
 
@@ -49,5 +51,18 @@ public class Controller implements ActionListener, CaretListener {
 
     public void caretUpdate(CaretEvent caretEvent) {
         viewer.footerUpdate();
+    }
+
+    public void insertUpdate(DocumentEvent documentEvent) {
+	viewer.setBool(true);        
+    }
+
+    public void removeUpdate(DocumentEvent documentEvent) {
+	viewer.setBool(true);        
+    }
+
+    public void changedUpdate(DocumentEvent documentEvent) {
+	viewer.setBool(true);        
+	//Plain text components don't fire these events.
     }
 }

@@ -13,6 +13,8 @@ public class Viewer {
     private JLabel caretPosition;
     private JLabel symbolCount;
     private JPanel footer;
+    private boolean b;     
+    private File file;
 
     public Viewer() {
         Controller controller = new Controller(this);
@@ -21,6 +23,7 @@ public class Viewer {
 
         textArea = new JTextArea();
         textArea.addCaretListener(controller);
+	textArea.getDocument().addDocumentListener(controller);
         JScrollPane scrollPane = new JScrollPane(textArea);
         TextLineNumber textLineNumber = new TextLineNumber(textArea);
         scrollPane.setRowHeaderView(textLineNumber);
@@ -37,14 +40,40 @@ public class Viewer {
         footer.add(tabSize);
         footer.add(symbolCount);
 
-        frame = new JFrame("Notepad MVC");
+	ImageIcon logo = new ImageIcon("Pictures/logo.png");
+
+        frame = new JFrame("New - Notepad MVC");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	frame.setIconImage(logo.getImage());
         frame.setJMenuBar(menuBar);
         frame.add(scrollPane);
         frame.add(footer, BorderLayout.SOUTH);
         frame.setSize(800, 600);
         frame.setLocation(500, 50);
         frame.setVisible(true);
+
+	b = false;     
+	file = null;
+    }
+
+    public void setBool(boolean b) {
+     	this.b = b;
+    }
+
+    public boolean getBool() {
+     	return this.b;
+    }
+
+    public void setFrameTitle(File fileName) {
+	frame.setTitle(fileName.getName() + " - Notepad MVC");
+    }
+
+    public void setFileName(File file) {
+     	this.file = file;
+    }
+  
+    public File getFileName() {
+     	return this.file;
     }
 
     public void showMessage(String message) {
@@ -70,6 +99,48 @@ public class Viewer {
             return fileChooser.getSelectedFile();
         }
         return null;
+    }
+
+    public File getFileForSaving() {
+        JFileChooser fileChooser = new JFileChooser();
+        int answer = fileChooser.showSaveDialog(frame);
+        if (answer == 0) {
+            return fileChooser.getSelectedFile();
+        }
+        return null;
+    }
+
+    public int getAnswer() {
+	String temp = "Do you want to save the changes to \n";
+	if(this.getFileName() == null) {
+	    temp = temp + "New?";
+	}
+	else {
+	    temp = temp + this.getFileName().getPath() + "?";
+	}   
+	Object[] options = {"Save", "Don't save", "Cancel"};
+	int n = JOptionPane.showOptionDialog(frame,
+    	    	temp,
+   	    	"Notepad MVC",
+     	JOptionPane.YES_NO_CANCEL_OPTION,
+    	JOptionPane.QUESTION_MESSAGE,
+    	null,
+    	options,
+    	options[2]);   
+	return n;            	
+    }
+
+    public int getAnswerConfirmReplace() {                     
+     	Object[] options = {"Yes", "No"};
+	int n = JOptionPane.showOptionDialog(frame,
+    	    "Do you want to replace\n" + this.getFileName().getName() + "?",
+            "Notepad MVC",
+    	    JOptionPane.YES_NO_OPTION,
+    	    JOptionPane.QUESTION_MESSAGE,
+    	    null,     //do not use a custom Icon
+    	    options,  //the titles of buttons
+    	    options[0]); //default button title
+	return n;
     }
 
     public void footerUpdate() {
