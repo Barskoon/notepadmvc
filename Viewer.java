@@ -23,7 +23,8 @@ public class Viewer {
 
         textArea = new JTextArea();
         textArea.addCaretListener(controller);
-	textArea.getDocument().addDocumentListener(controller);
+        textArea.getDocument().addDocumentListener(controller);
+        textArea.setLineWrap(true);
         JScrollPane scrollPane = new JScrollPane(textArea);
         TextLineNumber textLineNumber = new TextLineNumber(textArea);
         scrollPane.setRowHeaderView(textLineNumber);
@@ -302,6 +303,9 @@ public class Viewer {
         JCheckBoxMenuItem checkBoxMenuItem = new JCheckBoxMenuItem("Word-wrap", new ImageIcon("Pictures/wrap.png"), true);
         checkBoxMenuItem.addActionListener(controller);
         checkBoxMenuItem.setActionCommand("word_wrap");
+
+        ActionListener actionListener = actionEvent -> textArea.setLineWrap(checkBoxMenuItem.isSelected());
+        checkBoxMenuItem.addActionListener(actionListener);
 
         JMenuItem fontMenuItem = new JMenuItem("Fonts", new ImageIcon("Pictures/font.png"));
         fontMenuItem.addActionListener(controller);
