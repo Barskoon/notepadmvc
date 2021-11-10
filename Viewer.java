@@ -1,8 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.io.File;
 
 public class Viewer {
@@ -10,6 +8,7 @@ public class Viewer {
     private JFrame frame;
     private JTextArea textArea;
     private JFileChooser fileChooser;
+    private JMenuItem closeMenuItem;
     private JLabel tabSize;
     private JLabel caretPosition;
     private JLabel symbolCount;
@@ -50,6 +49,12 @@ public class Viewer {
 
         frame = new JFrame("New - Notepad MVC");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                closeMenuItem.doClick();
+            }
+        });
         frame.setIconImage(logo.getImage());
         frame.setJMenuBar(menuBar);
         frame.add(scrollPane);
@@ -201,7 +206,7 @@ public class Viewer {
         printMenuItem.addActionListener(controller);
         printMenuItem.setActionCommand("Printing_File");
 
-        JMenuItem closeMenuItem = new JMenuItem("Exit", new ImageIcon("Pictures/exit.png"));
+        closeMenuItem = new JMenuItem("Exit", new ImageIcon("Pictures/exit.png"));
         closeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
         closeMenuItem.addActionListener(controller);
         closeMenuItem.setActionCommand("Close_Program");
