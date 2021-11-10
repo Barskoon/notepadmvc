@@ -19,14 +19,16 @@ public class Viewer {
 
     public Viewer() {
         Controller controller = new Controller(this);
+        DocumentController documentController = new DocumentController(this);
+        CaretController caretController = new CaretController(this);
 
         JMenuBar menuBar = createJMenuBar(controller);
 
         fileChooser = new JFileChooser();
 
         textArea = new JTextArea();
-        textArea.addCaretListener(controller);
-        textArea.getDocument().addDocumentListener(controller);
+        textArea.addCaretListener(caretController);
+        textArea.getDocument().addDocumentListener(documentController);
         textArea.setLineWrap(true);
         JScrollPane scrollPane = new JScrollPane(textArea);
         TextLineNumber textLineNumber = new TextLineNumber(textArea);
@@ -294,7 +296,6 @@ public class Viewer {
 
     private JMenu createFormatMenu(Controller controller) {
         JCheckBoxMenuItem checkBoxMenuItem = new JCheckBoxMenuItem("Word-wrap", new ImageIcon("Pictures/wrap.png"), true);
-        checkBoxMenuItem.addActionListener(controller);
         checkBoxMenuItem.setActionCommand("word_wrap");
 
         ActionListener actionListener = actionEvent -> textArea.setLineWrap(checkBoxMenuItem.isSelected());
@@ -314,7 +315,6 @@ public class Viewer {
 
     private JMenu createViewMenu(Controller controller) {
         JCheckBoxMenuItem statusBarMenuItem = new JCheckBoxMenuItem("Status bar", new ImageIcon("Pictures/showCross.png"), true);
-        statusBarMenuItem.addActionListener(controller);
         statusBarMenuItem.setActionCommand("Status_Bar");
 
         ActionListener actionListener = actionEvent -> {

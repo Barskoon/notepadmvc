@@ -2,9 +2,8 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.event.*;
 
-public class Controller implements ActionListener, CaretListener, DocumentListener {
+public class Controller implements ActionListener {
 
     private Map<String, Task> map;
     private Viewer viewer;
@@ -47,22 +46,5 @@ public class Controller implements ActionListener, CaretListener, DocumentListen
                 viewer.showMessage("Something went wrong! Please repeat the action!");
             }
         }
-    }
-
-    public void caretUpdate(CaretEvent caretEvent) {
-        viewer.footerUpdate();
-    }
-
-    public void insertUpdate(DocumentEvent documentEvent) {
-        viewer.setBool(true);
-    }
-
-    public void removeUpdate(DocumentEvent documentEvent) {
-        viewer.setBool(true);
-    }
-
-    public void changedUpdate(DocumentEvent documentEvent) {
-        viewer.setBool(true);
-        // Plain text components don't fire these events.
     }
 }
