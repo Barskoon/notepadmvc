@@ -4,22 +4,25 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
- 
+
 public class Viewer {
 
     private JFrame frame;
     private JTextArea textArea;
+    private JFileChooser fileChooser;
     private JLabel tabSize;
     private JLabel caretPosition;
     private JLabel symbolCount;
     private JPanel footer;
-    private boolean b;     
+    private boolean b;
     private File file;
 
     public Viewer() {
         Controller controller = new Controller(this);
 
         JMenuBar menuBar = createJMenuBar(controller);
+
+        fileChooser = new JFileChooser();
 
         textArea = new JTextArea();
         textArea.addCaretListener(controller);
@@ -41,11 +44,11 @@ public class Viewer {
         footer.add(tabSize);
         footer.add(symbolCount);
 
-	ImageIcon logo = new ImageIcon("Pictures/logo.png");
+        ImageIcon logo = new ImageIcon("Pictures/logo.png");
 
         frame = new JFrame("New - Notepad MVC");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	frame.setIconImage(logo.getImage());
+        frame.setIconImage(logo.getImage());
         frame.setJMenuBar(menuBar);
         frame.add(scrollPane);
         frame.add(footer, BorderLayout.SOUTH);
@@ -53,28 +56,28 @@ public class Viewer {
         frame.setLocation(500, 50);
         frame.setVisible(true);
 
-	b = false;     
-	file = null;
+        b = false;
+        file = null;
     }
 
     public void setBool(boolean b) {
-     	this.b = b;
+        this.b = b;
     }
 
     public boolean getBool() {
-     	return this.b;
+        return b;
     }
 
     public void setFrameTitle(File fileName) {
-	frame.setTitle(fileName.getName() + " - Notepad MVC");
+        frame.setTitle(fileName.getName() + " - Notepad MVC");
     }
 
     public void setFileName(File file) {
-     	this.file = file;
+        this.file = file;
     }
-  
+
     public File getFileName() {
-     	return this.file;
+        return file;
     }
 
     public void showMessage(String message) {
@@ -94,7 +97,6 @@ public class Viewer {
     }
 
     public File getFile() {
-        JFileChooser fileChooser = new JFileChooser();
         int answer = fileChooser.showOpenDialog(frame);
         if (answer == 0) {
             return fileChooser.getSelectedFile();
@@ -103,7 +105,6 @@ public class Viewer {
     }
 
     public File getFileForSaving() {
-        JFileChooser fileChooser = new JFileChooser();
         int answer = fileChooser.showSaveDialog(frame);
         if (answer == 0) {
             return fileChooser.getSelectedFile();
@@ -112,36 +113,28 @@ public class Viewer {
     }
 
     public int getAnswer() {
-	String temp = "Do you want to save the changes to \n";
-	if(this.getFileName() == null) {
-	    temp = temp + "New?";
-	}
-	else {
-	    temp = temp + this.getFileName().getPath() + "?";
-	}   
-	Object[] options = {"Save", "Don't save", "Cancel"};
-	int n = JOptionPane.showOptionDialog(frame,
-    	    	temp,
-   	    	"Notepad MVC",
-     	JOptionPane.YES_NO_CANCEL_OPTION,
-    	JOptionPane.QUESTION_MESSAGE,
-    	null,
-    	options,
-    	options[2]);   
-	return n;            	
+        String temp = "Do you want to save the changes to \n";
+        if (getFileName() == null) {
+            temp = temp + "New?";
+        } else {
+            temp = temp + getFileName().getPath() + "?";
+        }
+        Object[] options = { "Save", "Don't save", "Cancel" };
+        int n = JOptionPane.showOptionDialog(frame, temp, "Notepad MVC", JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
+        return n;
     }
 
-    public int getAnswerConfirmReplace() {                     
-     	Object[] options = {"Yes", "No"};
-	int n = JOptionPane.showOptionDialog(frame,
-    	    "Do you want to replace\n" + this.getFileName().getName() + "?",
-            "Notepad MVC",
-    	    JOptionPane.YES_NO_OPTION,
-    	    JOptionPane.QUESTION_MESSAGE,
-    	    null,     //do not use a custom Icon
-    	    options,  //the titles of buttons
-    	    options[0]); //default button title
-	return n;
+    public int getAnswerConfirmReplace() {
+        Object[] options = { "Yes", "No" };
+        int n = JOptionPane.showOptionDialog(frame, "Do you want to replace\n" + getFileName().getName() + "?",
+                // do not use a custom Icon
+                "Notepad MVC", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+                // the titles of buttons
+                options,
+                // default button title
+                options[0]);
+        return n;
     }
 
     public void footerUpdate() {

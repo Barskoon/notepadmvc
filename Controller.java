@@ -15,14 +15,14 @@ public class Controller implements ActionListener, CaretListener, DocumentListen
     }
 
     private void initializeCommand() {
-        if(map == null) {
+        if (map == null) {
             map = new HashMap<>();
         }
 
         initializeCommand("Create_New_Document", new NewFile(viewer));
         initializeCommand("Open_File", new OpenFile(viewer));
-	initializeCommand("Save_File", new SaveFile(viewer));
-	initializeCommand("Save_As_File", new SaveAsFile(viewer));
+        initializeCommand("Save_File", new SaveFile(viewer));
+        initializeCommand("Save_As_File", new SaveAsFile(viewer));
         initializeCommand("Printing_File", new PrintingFile(viewer));
         initializeCommand("Close_Program", new CloseProgram(viewer));
         initializeCommand("Select_All", new SelectAll(viewer));
@@ -30,13 +30,13 @@ public class Controller implements ActionListener, CaretListener, DocumentListen
     }
 
     private boolean initializeCommand(String command, Task task) {
-        if(map != null) {
+        if (map != null) {
             map.put(command, task);
             return true;
         }
         return false;
     }
-    
+
     public void actionPerformed(ActionEvent actionEvent) {
         String command = actionEvent.getActionCommand();
 
@@ -54,15 +54,15 @@ public class Controller implements ActionListener, CaretListener, DocumentListen
     }
 
     public void insertUpdate(DocumentEvent documentEvent) {
-	viewer.setBool(true);        
+        viewer.setBool(true);
     }
 
     public void removeUpdate(DocumentEvent documentEvent) {
-	viewer.setBool(true);        
+        viewer.setBool(true);
     }
 
     public void changedUpdate(DocumentEvent documentEvent) {
-	viewer.setBool(true);        
-	//Plain text components don't fire these events.
+        viewer.setBool(true);
+        // Plain text components don't fire these events.
     }
 }
