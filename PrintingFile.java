@@ -18,9 +18,7 @@ public class PrintingFile implements Task {
         try {
             String textForPrinting = viewer.getInputText();
             PrinterJob printing = PrinterJob.getPrinterJob();
-            PageFormat pageFormat = printing.defaultPage();
-
-            System.out.println(printing.getPrintService());
+            PageFormat pageFormat = printing.pageDialog(printing.defaultPage());
             printing.setPrintable(new OutputPrinter(textForPrinting, pageFormat));
 
             if (printing.printDialog()) {
