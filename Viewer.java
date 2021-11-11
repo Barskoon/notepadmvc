@@ -301,7 +301,6 @@ public class Viewer {
 
     private JMenu createFormatMenu(Controller controller) {
         JCheckBoxMenuItem checkBoxMenuItem = new JCheckBoxMenuItem("Word-wrap", new ImageIcon("Pictures/wrap.png"), true);
-        checkBoxMenuItem.setActionCommand("word_wrap");
 
         ActionListener actionListener = actionEvent -> textArea.setLineWrap(checkBoxMenuItem.isSelected());
         checkBoxMenuItem.addActionListener(actionListener);
@@ -319,22 +318,25 @@ public class Viewer {
     }
 
     private JMenu createViewMenu(Controller controller) {
-        JCheckBoxMenuItem statusBarMenuItem = new JCheckBoxMenuItem("Status bar", new ImageIcon("Pictures/showCross.png"), true);
-        statusBarMenuItem.setActionCommand("Status_Bar");
+        ImageIcon showCrossIcon = new ImageIcon("Pictures/showCross.png");
+        ImageIcon showIcon = new ImageIcon("Pictures/show.png");
+        JCheckBoxMenuItem statusBarMenuItem = new JCheckBoxMenuItem("Status bar", showCrossIcon, true);
 
         ActionListener actionListener = actionEvent -> {
             AbstractButton abstractButton = (AbstractButton) actionEvent.getSource();
             boolean selected = abstractButton.getModel().isSelected();
             if (selected) {
+                statusBarMenuItem.setIcon(showCrossIcon);
                 footer.setVisible(true);
             } else {
+                statusBarMenuItem.setIcon(showIcon);
                 footer.setVisible(false);
             }
         };
 
         statusBarMenuItem.addActionListener(actionListener);
         JMenu viewMenu = new JMenu("View");
-        viewMenu.setMnemonic(KeyEvent.VK_I);
+        viewMenu.setMnemonic(KeyEvent.VK_V);
         viewMenu.add(statusBarMenuItem);
 
         return viewMenu;
@@ -352,6 +354,7 @@ public class Viewer {
         aboutMenuItem.setActionCommand("About");
 
         JMenu faqMenu = new JMenu("FAQ");
+        faqMenu.setMnemonic(KeyEvent.VK_F1);
         faqMenu.add(helpMenuItem);
         faqMenu.add(aboutMenuItem);
 
