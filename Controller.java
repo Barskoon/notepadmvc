@@ -24,6 +24,10 @@ public class Controller implements ActionListener {
         initializeCommand("Save_As_File", new SaveAsFile(viewer));
         initializeCommand("Printing_File", new PrintingFile(viewer));
         initializeCommand("Close_Program", new CloseProgram(viewer));
+        initializeCommand("Undo", new Undo(viewer));
+        initializeCommand("Cut", new Cut(viewer));
+        initializeCommand("Copy", new Copy(viewer));
+        initializeCommand("Paste", new Paste(viewer));
         initializeCommand("Select_All", new SelectAll(viewer));
         initializeCommand("Time_And_Date", new TimeAndDate(viewer));
     }

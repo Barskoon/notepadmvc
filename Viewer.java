@@ -126,14 +126,14 @@ public class Viewer {
         } else {
             temp = temp + getFileName().getPath() + "?";
         }
-        Object[] options = { "Save", "Don't save", "Cancel" };
+        Object[] options = {"Save", "Don't save", "Cancel"};
         int n = JOptionPane.showOptionDialog(frame, temp, "Notepad MVC", JOptionPane.YES_NO_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
         return n;
     }
 
     public int getAnswerConfirmReplace() {
-        Object[] options = { "Yes", "No" };
+        Object[] options = {"Yes", "No"};
         int n = JOptionPane.showOptionDialog(frame, "Do you want to replace\n" + getFileName().getName() + "?",
                 // do not use a custom Icon
                 "Notepad MVC", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
@@ -163,6 +163,32 @@ public class Viewer {
 
     public String getInputText() {
         return textArea.getText();
+    }
+
+//    public JMenuItem getUndoMenuItem() {
+//        return undoMenuItem;
+//    }
+
+    public void cutText() {
+        if (textArea.getSelectedText() != null) {
+            textArea.cut();
+        } else {
+            showMessage("Nothing to cut");
+        }
+    }
+
+    public void copyText() {
+        if (textArea.getSelectedText() != null) {
+            textArea.copy();
+        } else {
+            showMessage("Nothing to copy");
+        }
+    }
+
+    public void pasteText() {
+        textArea.paste();
+        textArea.getDocument();
+        System.out.println(textArea.getDocument());
     }
 
     private JMenuBar createJMenuBar(Controller controller) {
