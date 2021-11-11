@@ -30,6 +30,7 @@ public class Controller implements ActionListener {
         initializeCommand("Paste", new Paste(viewer));
         initializeCommand("Select_All", new SelectAll(viewer));
         initializeCommand("Time_And_Date", new TimeAndDate(viewer));
+        initializeCommand("Choose_font", new Fonts(viewer));
     }
 
     private boolean initializeCommand(String command, Task task) {

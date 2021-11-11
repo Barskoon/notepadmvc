@@ -15,6 +15,7 @@ public class Viewer {
     private JPanel footer;
     private boolean b;
     private File file;
+    private Font font = new Font("Dialog",Font.PLAIN,22);
 
     public Viewer() {
         Controller controller = new Controller(this);
@@ -29,6 +30,7 @@ public class Viewer {
         textArea.addCaretListener(caretController);
         textArea.getDocument().addDocumentListener(documentController);
         textArea.setLineWrap(true);
+        textArea.setFont(font);
         JScrollPane scrollPane = new JScrollPane(textArea);
         TextLineNumber textLineNumber = new TextLineNumber(textArea);
         scrollPane.setRowHeaderView(textLineNumber);
@@ -163,6 +165,13 @@ public class Viewer {
 
     public String getInputText() {
         return textArea.getText();
+    }
+    public void updateFont(Font font) {
+        this.font = font;
+        textArea.setFont(font);
+    }
+    public Font getFonts() {
+        return font;
     }
 
 //    public JMenuItem getUndoMenuItem() {
