@@ -1,4 +1,3 @@
-
 public class Copy implements Task {
     private Viewer viewer;
 

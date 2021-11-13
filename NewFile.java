@@ -40,23 +40,11 @@ public class NewFile implements Task {
 			viewer.setFileName(null);
 			viewer.setBool(false);
 		} else if (n == 0) {
-			if (viewer.getFileName() == null) {
-				saveFile.doTask();
-				if(saveFile.getCheck() == true){
-					viewer.updateText("");
-					viewer.setFrameTitle(new File("New"));
-					viewer.setFileName(null);
-					viewer.setBool(false);
-				} else {
-					return;
-				}
-			} else{
-				saveFile.doTask();
-				viewer.updateText("");
-				viewer.setFrameTitle(new File("New"));
-				viewer.setFileName(null);
-				viewer.setBool(false);
-			}
+			saveFile.doTask();
+			viewer.updateText("");
+			viewer.setFrameTitle(new File("New"));
+			viewer.setFileName(null);
+			viewer.setBool(false);
 		} else {
 			return;
 		}
