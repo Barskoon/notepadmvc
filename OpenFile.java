@@ -40,7 +40,11 @@ public class OpenFile implements Task {
             openFileMethod();
         } else if (n == 0) {
             saveFile.doTask();
-            openFileMethod();
+            if(saveFile.getCheck() == true){
+                openFileMethod();
+            } else {
+                return;
+            }
         } else {
             return;
         }
