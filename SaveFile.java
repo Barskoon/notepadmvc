@@ -6,19 +6,9 @@ import java.io.PrintWriter;
 public class SaveFile implements Task {
 
 	private Viewer viewer;
-	private boolean check;
 
 	public SaveFile(Viewer viewer) {
 		this.viewer = viewer;
-		check = false;
-	}
-
-	public void setCheck(boolean check) {
-		this.check = check;
-	}
-
-	public boolean getCheck() {
-		return check;
 	}
 
 	public void doTask() {
@@ -32,7 +22,6 @@ public class SaveFile implements Task {
 					int n = viewer.getAnswerConfirmReplace();
 					if (n == 0) {
 						saveTextWithTryCatch(textFromTextArea, file1);
-						setCheck(true);
 					} else {
 						viewer.setFileName(null);
 					}

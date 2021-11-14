@@ -269,6 +269,5 @@ public class Fonts implements Task {
             returnStatus = retStatus;
             setVisible(false);
         }
-
     }
 }

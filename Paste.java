@@ -1,4 +1,3 @@
-
 public class Paste implements Task {
     private Viewer viewer;
 
