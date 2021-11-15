@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
@@ -18,6 +20,9 @@ public class Viewer {
     private JPanel footer;
     private JDialog findDialog;
     private JTextField inputSearchField;
+    private JCheckBox caseCheckBox;
+    private JCheckBox wrapCheckBox;
+    private JRadioButton radioButtonDown;
 
     private Highlighter hilit;
     private Highlighter.HighlightPainter painter;
@@ -75,7 +80,13 @@ public class Viewer {
     }
 
     public int getCursorPosition() {
-        return textArea.getCaretPosition();
+        int cursorPosition;
+        try {
+            cursorPosition = textArea.getCaretPosition();
+        } catch (NullPointerException e){
+            cursorPosition = 0;
+        }
+        return cursorPosition;
     }
 
     public File getFile() {
@@ -300,7 +311,7 @@ public class Viewer {
         return faqMenu;
     }
 
-    public void showFindDialog(Controller controller){
+    public void createFindDialog(Controller controller){
         findDialog = new JDialog(frame, "Find");
 
         Container contentPanel = findDialog.getContentPane();
@@ -320,10 +331,10 @@ public class Viewer {
         cancelButton.addActionListener(controller);
         cancelButton.setActionCommand("Cancel_Find_Dialog");
 
-        JCheckBox caseCheckBox = new JCheckBox("Match case");
-        JCheckBox wrapCheckBox = new JCheckBox("Wrap around");
+        caseCheckBox = new JCheckBox("Match case");
+        wrapCheckBox = new JCheckBox("Wrap around");
         JRadioButton radioButtonUp = new JRadioButton("Find up");
-        JRadioButton radioButtonDown = new JRadioButton("Find down");
+        radioButtonDown = new JRadioButton("Find down");
 
         ButtonGroup group = new ButtonGroup();
         group.add(radioButtonUp);
@@ -395,5 +406,19 @@ public class Viewer {
     public void setFindWordBackGround(){
         inputSearchField.setBackground(entryBg);
     }
+
+    public boolean getMatchCaseValue() {
+        return caseCheckBox.isSelected();
+    }
+
+    public boolean getWrapTextValue() {
+        return wrapCheckBox.isSelected();
+    }
+
+    public boolean getRadioBtnDownValue(){
+        return radioButtonDown.isSelected();
+    }
+
+
 
 }

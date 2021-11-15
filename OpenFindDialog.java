@@ -1,6 +1,3 @@
-import javax.swing.text.BadLocationException;
-import java.util.ArrayList;
-
 public class OpenFindDialog implements Task {
     private Viewer viewer;
     private Controller controller;
@@ -13,6 +10,6 @@ public class OpenFindDialog implements Task {
 
     @Override
     public void doTask() {
-        viewer.showFindDialog(controller);
+        viewer.createFindDialog(controller);
     }
 }
