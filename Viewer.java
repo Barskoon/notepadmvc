@@ -5,19 +5,22 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.io.File;
 
 public class Viewer {
 
     private JFrame frame;
     private JTextArea textArea;
+    private JFileChooser fileChooser;
+    private JMenuItem closeMenuItem;
     private JLabel tabSize;
     private JLabel caretPosition;
     private JLabel symbolCount;
     private JPanel footer;
+    private boolean b;
+    private File file;
+    private Font font = new Font("Dialog",Font.PLAIN,12);
     private JDialog findDialog;
     private JTextField inputSearchField;
     private JCheckBox caseCheckBox;
@@ -31,11 +34,18 @@ public class Viewer {
 
     public Viewer() {
         Controller controller = new Controller(this);
+        DocumentController documentController = new DocumentController(this);
+        CaretController caretController = new CaretController(this);
 
         JMenuBar menuBar = createJMenuBar(controller);
 
+        fileChooser = new JFileChooser();
+
         textArea = new JTextArea();
-        textArea.addCaretListener(controller);
+        textArea.addCaretListener(caretController);
+        textArea.getDocument().addDocumentListener(documentController);
+        textArea.setLineWrap(true);
+        textArea.setFont(font);
         JScrollPane scrollPane = new JScrollPane(textArea);
         TextLineNumber textLineNumber = new TextLineNumber(textArea);
         scrollPane.setRowHeaderView(textLineNumber);
@@ -56,14 +66,46 @@ public class Viewer {
         footer.add(tabSize);
         footer.add(symbolCount);
 
-        frame = new JFrame("Notepad MVC");
+        ImageIcon logo = new ImageIcon("Pictures/logo.png");
+
+        frame = new JFrame("New - Notepad MVC");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                closeMenuItem.doClick();
+            }
+        });
+        frame.setIconImage(logo.getImage());
         frame.setJMenuBar(menuBar);
         frame.add(scrollPane);
         frame.add(footer, BorderLayout.SOUTH);
         frame.setSize(800, 600);
         frame.setLocation(500, 50);
         frame.setVisible(true);
+
+        b = false;
+        file = null;
+    }
+
+    public void setBool(boolean b) {
+        this.b = b;
+    }
+
+    public boolean getBool() {
+        return b;
+    }
+
+    public void setFrameTitle(File fileName) {
+        frame.setTitle(fileName.getName() + " - Notepad MVC");
+    }
+
+    public void setFileName(File file) {
+        this.file = file;
+    }
+
+    public File getFileName() {
+        return file;
     }
 
     public void showMessage(String message) {
@@ -90,12 +132,44 @@ public class Viewer {
     }
 
     public File getFile() {
-        JFileChooser fileChooser = new JFileChooser();
         int answer = fileChooser.showOpenDialog(frame);
         if (answer == 0) {
             return fileChooser.getSelectedFile();
         }
         return null;
+    }
+
+    public File getFileForSaving() {
+        int answer = fileChooser.showSaveDialog(frame);
+        if (answer == 0) {
+            return fileChooser.getSelectedFile();
+        }
+        return null;
+    }
+
+    public int getAnswer() {
+        String temp = "Do you want to save the changes to \n";
+        if (getFileName() == null) {
+            temp = temp + "New?";
+        } else {
+            temp = temp + getFileName().getPath() + "?";
+        }
+        Object[] options = {"Save", "Don't save", "Cancel"};
+        int n = JOptionPane.showOptionDialog(frame, temp, "Notepad MVC", JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
+        return n;
+    }
+
+    public int getAnswerConfirmReplace() {
+        Object[] options = {"Yes", "No"};
+        int n = JOptionPane.showOptionDialog(frame, "Do you want to replace\n" + getFileName().getName() + "?",
+                // do not use a custom Icon
+                "Notepad MVC", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+                // the titles of buttons
+                options,
+                // default button title
+                options[0]);
+        return n;
     }
 
     public void footerUpdate() {
@@ -117,6 +191,34 @@ public class Viewer {
 
     public String getInputText() {
         return textArea.getText();
+    }
+
+    public void updateFont(Font font) {
+        this.font = font;
+        textArea.setFont(font);
+    }
+
+    public Font getFonts() { return font; }
+
+    public void cutText() {
+        if (textArea.getSelectedText() != null) {
+            textArea.cut();
+        } else {
+            showMessage("Nothing to cut");
+        }
+    }
+
+    public void copyText() {
+        if (textArea.getSelectedText() != null) {
+            textArea.copy();
+        } else {
+            showMessage("Nothing to copy");
+        }
+    }
+
+    public void pasteText() {
+        textArea.paste();
+        textArea.getDocument();
     }
 
     private JMenuBar createJMenuBar(Controller controller) {
@@ -160,7 +262,7 @@ public class Viewer {
         printMenuItem.addActionListener(controller);
         printMenuItem.setActionCommand("Printing_File");
 
-        JMenuItem closeMenuItem = new JMenuItem("Exit", new ImageIcon("Pictures/delete.png"));
+        closeMenuItem = new JMenuItem("Exit", new ImageIcon("Pictures/exit.png"));
         closeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
         closeMenuItem.addActionListener(controller);
         closeMenuItem.setActionCommand("Close_Program");
@@ -179,7 +281,7 @@ public class Viewer {
     }
 
     private JMenu createEditMenu(Controller controller) {
-        JMenuItem undoMenuItem = new JMenuItem("Undo", new ImageIcon("Pictures/back.png"));
+        JMenuItem undoMenuItem = new JMenuItem("Undo", new ImageIcon("Pictures/undo.png"));
         undoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
         undoMenuItem.addActionListener(controller);
         undoMenuItem.setActionCommand("Undo");
@@ -224,7 +326,7 @@ public class Viewer {
         gotoMenuItem.addActionListener(controller);
         gotoMenuItem.setActionCommand("Go_To");
 
-        JMenuItem selectAllMenuItem = new JMenuItem("Select all", new ImageIcon("Pictures/font.png"));
+        JMenuItem selectAllMenuItem = new JMenuItem("Select all", new ImageIcon("Pictures/marker.png"));
         selectAllMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
         selectAllMenuItem.addActionListener(controller);
         selectAllMenuItem.setActionCommand("Select_All");
@@ -254,11 +356,13 @@ public class Viewer {
     }
 
     private JMenu createFormatMenu(Controller controller) {
-        JCheckBoxMenuItem checkBoxMenuItem = new JCheckBoxMenuItem("Word-wrap", new ImageIcon("Pictures/go.png"), true);
-        checkBoxMenuItem.addActionListener(controller);
+        JCheckBoxMenuItem checkBoxMenuItem = new JCheckBoxMenuItem("Word-wrap", new ImageIcon("Pictures/wrap.png"), true);
         checkBoxMenuItem.setActionCommand("word_wrap");
 
-        JMenuItem fontMenuItem = new JMenuItem("Fonts", new ImageIcon("Pictures/color.png"));
+        ActionListener actionListener = actionEvent -> textArea.setLineWrap(checkBoxMenuItem.isSelected());
+        checkBoxMenuItem.addActionListener(actionListener);
+
+        JMenuItem fontMenuItem = new JMenuItem("Fonts", new ImageIcon("Pictures/font.png"));
         fontMenuItem.addActionListener(controller);
         fontMenuItem.setActionCommand("Choose_font");
 
@@ -271,8 +375,7 @@ public class Viewer {
     }
 
     private JMenu createViewMenu(Controller controller) {
-        JCheckBoxMenuItem statusBarMenuItem = new JCheckBoxMenuItem("Status bar", new ImageIcon("Pictures/options.png"), true);
-        statusBarMenuItem.addActionListener(controller);
+        JCheckBoxMenuItem statusBarMenuItem = new JCheckBoxMenuItem("Status bar", new ImageIcon("Pictures/showCross.png"), true);
         statusBarMenuItem.setActionCommand("Status_Bar");
 
         ActionListener actionListener = actionEvent -> {
@@ -294,12 +397,12 @@ public class Viewer {
     }
 
     private JMenu createFaqMenu(Controller controller) {
-        JMenuItem helpMenuItem = new JMenuItem("Help", new ImageIcon("Pictures/findMore.png"));
+        JMenuItem helpMenuItem = new JMenuItem("Help", new ImageIcon("Pictures/help.png"));
         helpMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
         helpMenuItem.addActionListener(controller);
         helpMenuItem.setActionCommand("Help");
 
-        JMenuItem aboutMenuItem = new JMenuItem("About", new ImageIcon("Pictures/marker.png"));
+        JMenuItem aboutMenuItem = new JMenuItem("About", new ImageIcon("Pictures/info.png"));
         aboutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
         aboutMenuItem.addActionListener(controller);
         aboutMenuItem.setActionCommand("About");
