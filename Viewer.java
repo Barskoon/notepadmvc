@@ -7,7 +7,6 @@ public class Viewer {
 
     private JFrame frame;
     private JTextArea textArea;
-    private JFileChooser fileChooser;
     private JMenuItem closeMenuItem;
     private JLabel tabSize;
     private JLabel caretPosition;
@@ -15,7 +14,7 @@ public class Viewer {
     private JPanel footer;
     private boolean b;
     private File file;
-    private Font font = new Font("Dialog",Font.PLAIN,12);
+    private Font font;
 
     public Viewer() {
         Controller controller = new Controller(this);
@@ -23,8 +22,9 @@ public class Viewer {
         CaretController caretController = new CaretController(this);
 
         JMenuBar menuBar = createJMenuBar(controller);
+        JToolBar toolBar = createJToolBar(controller);
 
-        fileChooser = new JFileChooser();
+        font = new Font("Dialog", Font.PLAIN, 22);
 
         textArea = new JTextArea();
         textArea.addCaretListener(caretController);
@@ -32,8 +32,6 @@ public class Viewer {
         textArea.setLineWrap(true);
         textArea.setFont(font);
         JScrollPane scrollPane = new JScrollPane(textArea);
-        TextLineNumber textLineNumber = new TextLineNumber(textArea);
-        scrollPane.setRowHeaderView(textLineNumber);
 
         footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
@@ -50,7 +48,7 @@ public class Viewer {
         ImageIcon logo = new ImageIcon("Pictures/logo.png");
 
         frame = new JFrame("New - Notepad MVC");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -60,6 +58,7 @@ public class Viewer {
         frame.setIconImage(logo.getImage());
         frame.setJMenuBar(menuBar);
         frame.add(scrollPane);
+        frame.add(toolBar, BorderLayout.NORTH);
         frame.add(footer, BorderLayout.SOUTH);
         frame.setSize(800, 600);
         frame.setLocation(500, 50);
@@ -106,6 +105,7 @@ public class Viewer {
     }
 
     public File getFile() {
+        JFileChooser fileChooser = new JFileChooser();
         int answer = fileChooser.showOpenDialog(frame);
         if (answer == 0) {
             return fileChooser.getSelectedFile();
@@ -114,6 +114,7 @@ public class Viewer {
     }
 
     public File getFileForSaving() {
+        JFileChooser fileChooser = new JFileChooser();
         int answer = fileChooser.showSaveDialog(frame);
         if (answer == 0) {
             return fileChooser.getSelectedFile();
@@ -386,5 +387,45 @@ public class Viewer {
         faqMenu.add(aboutMenuItem);
 
         return faqMenu;
+    }
+
+    private JToolBar createJToolBar(Controller controller) {
+        JButton newButton = makeNavigationButton("New", "new", "Create_New_Document", controller);
+        JButton openButton = makeNavigationButton("Open", "open", "Open_File", controller);
+        JButton saveButton = makeNavigationButton("Save", "save", "Save_File", controller);
+        JButton printButton = makeNavigationButton("Print", "print", "Printing_File", controller);
+        JButton cutButton = makeNavigationButton("Cut", "cut", "Cut", controller);
+        JButton copyButton = makeNavigationButton("Copy", "copy", "Copy", controller);
+        JButton pasteButton = makeNavigationButton("Paste", "past", "Paste", controller);
+        JButton fontsButton = makeNavigationButton("Fonts", "font", "Choose_font", controller);
+
+        JToolBar toolBar = new JToolBar();
+        toolBar.setFloatable(true);
+        toolBar.setRollover(true);
+        toolBar.add(newButton);
+        toolBar.add(openButton);
+        toolBar.add(saveButton);
+        toolBar.add(printButton);
+        toolBar.addSeparator();
+        toolBar.add(cutButton);
+        toolBar.add(copyButton);
+        toolBar.add(pasteButton);
+        toolBar.add(fontsButton);
+
+        return toolBar;
+    }
+
+    private JButton makeNavigationButton(String toolTipText, String imageName, String actionCommand, Controller controller) {
+        String imgLocation = "Pictures/"
+                + imageName
+                + ".png";
+
+        JButton button = new JButton();
+        button.setIcon(new ImageIcon(imgLocation));
+        button.setToolTipText(toolTipText);
+        button.addActionListener(controller);
+        button.setActionCommand(actionCommand);
+
+        return button;
     }
 }
