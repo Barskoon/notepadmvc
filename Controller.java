@@ -2,9 +2,8 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.event.*;
 
-public class Controller implements ActionListener, CaretListener, DocumentListener {
+public class Controller implements ActionListener {
 
     private Map<String, Task> map;
     private Viewer viewer;
@@ -15,28 +14,34 @@ public class Controller implements ActionListener, CaretListener, DocumentListen
     }
 
     private void initializeCommand() {
-        if(map == null) {
+        if (map == null) {
             map = new HashMap<>();
         }
 
         initializeCommand("Create_New_Document", new NewFile(viewer));
         initializeCommand("Open_File", new OpenFile(viewer));
-	initializeCommand("Save_File", new SaveFile(viewer));
-	initializeCommand("Save_As_File", new SaveAsFile(viewer));
+        initializeCommand("Save_File", new SaveFile(viewer));
+        initializeCommand("Save_As_File", new SaveAsFile(viewer));
         initializeCommand("Printing_File", new PrintingFile(viewer));
         initializeCommand("Close_Program", new CloseProgram(viewer));
+        initializeCommand("Undo", new Undo(viewer));
+        initializeCommand("Cut", new Cut(viewer));
+        initializeCommand("Copy", new Copy(viewer));
+        initializeCommand("Paste", new Paste(viewer));
+        initializeCommand("Remove", new Remove(viewer));
         initializeCommand("Select_All", new SelectAll(viewer));
         initializeCommand("Time_And_Date", new TimeAndDate(viewer));
+        initializeCommand("Choose_font", new Fonts(viewer));
     }
 
     private boolean initializeCommand(String command, Task task) {
-        if(map != null) {
+        if (map != null) {
             map.put(command, task);
             return true;
         }
         return false;
     }
-    
+
     public void actionPerformed(ActionEvent actionEvent) {
         String command = actionEvent.getActionCommand();
 
@@ -47,22 +52,5 @@ public class Controller implements ActionListener, CaretListener, DocumentListen
                 viewer.showMessage("Something went wrong! Please repeat the action!");
             }
         }
-    }
-
-    public void caretUpdate(CaretEvent caretEvent) {
-        viewer.footerUpdate();
-    }
-
-    public void insertUpdate(DocumentEvent documentEvent) {
-	viewer.setBool(true);        
-    }
-
-    public void removeUpdate(DocumentEvent documentEvent) {
-	viewer.setBool(true);        
-    }
-
-    public void changedUpdate(DocumentEvent documentEvent) {
-	viewer.setBool(true);        
-	//Plain text components don't fire these events.
     }
 }

@@ -1,33 +1,37 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.io.File;
- 
+
 public class Viewer {
 
     private JFrame frame;
     private JTextArea textArea;
+    private JMenuItem closeMenuItem;
     private JLabel tabSize;
     private JLabel caretPosition;
     private JLabel symbolCount;
     private JPanel footer;
-    private boolean b;     
+    private boolean b;
     private File file;
+    private Font font;
 
     public Viewer() {
         Controller controller = new Controller(this);
+        DocumentController documentController = new DocumentController(this);
+        CaretController caretController = new CaretController(this);
 
         JMenuBar menuBar = createJMenuBar(controller);
+        JToolBar toolBar = createJToolBar(controller);
+
+        font = new Font("Dialog", Font.PLAIN, 22);
 
         textArea = new JTextArea();
-        textArea.addCaretListener(controller);
-	    textArea.getDocument().addDocumentListener(controller);
+        textArea.addCaretListener(caretController);
+        textArea.getDocument().addDocumentListener(documentController);
         textArea.setLineWrap(true);
+        textArea.setFont(font);
         JScrollPane scrollPane = new JScrollPane(textArea);
-        TextLineNumber textLineNumber = new TextLineNumber(textArea);
-        scrollPane.setRowHeaderView(textLineNumber);
 
         footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
@@ -41,40 +45,47 @@ public class Viewer {
         footer.add(tabSize);
         footer.add(symbolCount);
 
-	ImageIcon logo = new ImageIcon("Pictures/logo.png");
+        ImageIcon logo = new ImageIcon("Pictures/logo.png");
 
         frame = new JFrame("New - Notepad MVC");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	frame.setIconImage(logo.getImage());
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                closeMenuItem.doClick();
+            }
+        });
+        frame.setIconImage(logo.getImage());
         frame.setJMenuBar(menuBar);
         frame.add(scrollPane);
+        frame.add(toolBar, BorderLayout.NORTH);
         frame.add(footer, BorderLayout.SOUTH);
         frame.setSize(800, 600);
         frame.setLocation(500, 50);
         frame.setVisible(true);
 
-	b = false;     
-	file = null;
+        b = false;
+        file = null;
     }
 
     public void setBool(boolean b) {
-     	this.b = b;
+        this.b = b;
     }
 
     public boolean getBool() {
-     	return this.b;
+        return b;
     }
 
     public void setFrameTitle(File fileName) {
-	frame.setTitle(fileName.getName() + " - Notepad MVC");
+        frame.setTitle(fileName.getName() + " - Notepad MVC");
     }
 
     public void setFileName(File file) {
-     	this.file = file;
+        this.file = file;
     }
-  
+
     public File getFileName() {
-     	return this.file;
+        return file;
     }
 
     public void showMessage(String message) {
@@ -112,36 +123,28 @@ public class Viewer {
     }
 
     public int getAnswer() {
-	String temp = "Do you want to save the changes to \n";
-	if(this.getFileName() == null) {
-	    temp = temp + "New?";
-	}
-	else {
-	    temp = temp + this.getFileName().getPath() + "?";
-	}   
-	Object[] options = {"Save", "Don't save", "Cancel"};
-	int n = JOptionPane.showOptionDialog(frame,
-    	    	temp,
-   	    	"Notepad MVC",
-     	JOptionPane.YES_NO_CANCEL_OPTION,
-    	JOptionPane.QUESTION_MESSAGE,
-    	null,
-    	options,
-    	options[2]);   
-	return n;            	
+        String temp = "Do you want to save the changes to \n";
+        if (getFileName() == null) {
+            temp = temp + "New?";
+        } else {
+            temp = temp + getFileName().getPath() + "?";
+        }
+        Object[] options = {"Save", "Don't save", "Cancel"};
+        int n = JOptionPane.showOptionDialog(frame, temp, "Notepad MVC", JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
+        return n;
     }
 
-    public int getAnswerConfirmReplace() {                     
-     	Object[] options = {"Yes", "No"};
-	int n = JOptionPane.showOptionDialog(frame,
-    	    "Do you want to replace\n" + this.getFileName().getName() + "?",
-            "Notepad MVC",
-    	    JOptionPane.YES_NO_OPTION,
-    	    JOptionPane.QUESTION_MESSAGE,
-    	    null,     //do not use a custom Icon
-    	    options,  //the titles of buttons
-    	    options[0]); //default button title
-	return n;
+    public int getAnswerConfirmReplace() {
+        Object[] options = {"Yes", "No"};
+        int n = JOptionPane.showOptionDialog(frame, "Do you want to replace\n" + getFileName().getName() + "?",
+                // do not use a custom Icon
+                "Notepad MVC", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+                // the titles of buttons
+                options,
+                // default button title
+                options[0]);
+        return n;
     }
 
     public void footerUpdate() {
@@ -163,6 +166,42 @@ public class Viewer {
 
     public String getInputText() {
         return textArea.getText();
+    }
+
+    public void updateFont(Font font) {
+        this.font = font;
+        textArea.setFont(font);
+    }
+
+    public Font getFonts() { return font; }
+
+    public void cutText() {
+        if (textArea.getSelectedText() != null) {
+            textArea.cut();
+        } else {
+            showMessage("Nothing to cut");
+        }
+    }
+
+    public void copyText() {
+        if (textArea.getSelectedText() != null) {
+            textArea.copy();
+        } else {
+            showMessage("Nothing to copy");
+        }
+    }
+
+    public void pasteText() {
+        textArea.paste();
+        textArea.getDocument();
+    }
+
+    public void removeText() {
+        if (textArea.getSelectedText() != null) {
+            textArea.setText(textArea.getText().replace(textArea.getSelectedText(),""));
+        } else {
+            showMessage("Nothing to remove");
+        }
     }
 
     private JMenuBar createJMenuBar(Controller controller) {
@@ -206,7 +245,7 @@ public class Viewer {
         printMenuItem.addActionListener(controller);
         printMenuItem.setActionCommand("Printing_File");
 
-        JMenuItem closeMenuItem = new JMenuItem("Exit", new ImageIcon("Pictures/exit.png"));
+        closeMenuItem = new JMenuItem("Exit", new ImageIcon("Pictures/exit.png"));
         closeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
         closeMenuItem.addActionListener(controller);
         closeMenuItem.setActionCommand("Close_Program");
@@ -301,7 +340,6 @@ public class Viewer {
 
     private JMenu createFormatMenu(Controller controller) {
         JCheckBoxMenuItem checkBoxMenuItem = new JCheckBoxMenuItem("Word-wrap", new ImageIcon("Pictures/wrap.png"), true);
-        checkBoxMenuItem.addActionListener(controller);
         checkBoxMenuItem.setActionCommand("word_wrap");
 
         ActionListener actionListener = actionEvent -> textArea.setLineWrap(checkBoxMenuItem.isSelected());
@@ -321,7 +359,6 @@ public class Viewer {
 
     private JMenu createViewMenu(Controller controller) {
         JCheckBoxMenuItem statusBarMenuItem = new JCheckBoxMenuItem("Status bar", new ImageIcon("Pictures/showCross.png"), true);
-        statusBarMenuItem.addActionListener(controller);
         statusBarMenuItem.setActionCommand("Status_Bar");
 
         ActionListener actionListener = actionEvent -> {
@@ -358,5 +395,45 @@ public class Viewer {
         faqMenu.add(aboutMenuItem);
 
         return faqMenu;
+    }
+
+    private JToolBar createJToolBar(Controller controller) {
+        JButton newButton = makeNavigationButton("New", "new", "Create_New_Document", controller);
+        JButton openButton = makeNavigationButton("Open", "open", "Open_File", controller);
+        JButton saveButton = makeNavigationButton("Save", "save", "Save_File", controller);
+        JButton printButton = makeNavigationButton("Print", "print", "Printing_File", controller);
+        JButton cutButton = makeNavigationButton("Cut", "cut", "Cut", controller);
+        JButton copyButton = makeNavigationButton("Copy", "copy", "Copy", controller);
+        JButton pasteButton = makeNavigationButton("Paste", "past", "Paste", controller);
+        JButton fontsButton = makeNavigationButton("Fonts", "font", "Choose_font", controller);
+
+        JToolBar toolBar = new JToolBar();
+        toolBar.setFloatable(true);
+        toolBar.setRollover(true);
+        toolBar.add(newButton);
+        toolBar.add(openButton);
+        toolBar.add(saveButton);
+        toolBar.add(printButton);
+        toolBar.addSeparator();
+        toolBar.add(cutButton);
+        toolBar.add(copyButton);
+        toolBar.add(pasteButton);
+        toolBar.add(fontsButton);
+
+        return toolBar;
+    }
+
+    private JButton makeNavigationButton(String toolTipText, String imageName, String actionCommand, Controller controller) {
+        String imgLocation = "Pictures/"
+                + imageName
+                + ".png";
+
+        JButton button = new JButton();
+        button.setIcon(new ImageIcon(imgLocation));
+        button.setToolTipText(toolTipText);
+        button.addActionListener(controller);
+        button.setActionCommand(actionCommand);
+
+        return button;
     }
 }
