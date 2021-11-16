@@ -1,6 +1,4 @@
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
@@ -21,11 +19,16 @@ public class Viewer {
     private boolean b;
     private File file;
     private Font font = new Font("Dialog",Font.PLAIN,12);
+
     private JDialog findDialog;
+    private JDialog replaceDialog;
+    private JDialog gotoDialog;
     private JTextField inputSearchField;
+    private JTextField inputReplaceFromField;
+    private JTextField inputReplaceToField;
+    private JTextField inputGotoLineField;
     private JCheckBox caseCheckBox;
     private JCheckBox wrapCheckBox;
-    private JRadioButton radioButtonDown;
 
     private Highlighter hilit;
     private Highlighter.HighlightPainter painter;
@@ -319,7 +322,7 @@ public class Viewer {
         JMenuItem replaceMenuItem = new JMenuItem("Replace", new ImageIcon("Pictures/change.png"));
         replaceMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK));
         replaceMenuItem.addActionListener(controller);
-        replaceMenuItem.setActionCommand("Replace");
+        replaceMenuItem.setActionCommand("Open_Replace_Dialog");
 
         JMenuItem gotoMenuItem = new JMenuItem("Go to", new ImageIcon("Pictures/go.png"));
         gotoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, ActionEvent.CTRL_MASK));
@@ -414,6 +417,65 @@ public class Viewer {
         return faqMenu;
     }
 
+    public void createReplaceDialog(Controller controller){
+        replaceDialog = new JDialog(frame, "Replace");
+
+        Container contentPanel = replaceDialog.getContentPane();
+        GroupLayout layout = new GroupLayout(contentPanel);
+        contentPanel.setLayout(layout);
+
+        inputReplaceFromField = new JTextField();
+        JLabel labelReplaceFrom = new JLabel();
+        labelReplaceFrom.setText("From:");
+
+        inputReplaceToField = new JTextField();
+        JLabel labelReplaceTo = new JLabel();
+        labelReplaceTo.setText("To:");
+
+        JButton replaceButton = new JButton("Replace");
+        replaceButton.addActionListener(controller);
+        replaceButton.setActionCommand("Replace_Word_Button");
+
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(controller);
+        cancelButton.setActionCommand("Cancel_Replace_Dialog");
+
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
+
+        layout.setHorizontalGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(labelReplaceFrom)
+                        .addComponent(labelReplaceTo)
+                )
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(inputReplaceFromField)
+                        .addComponent(inputReplaceToField))
+
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(replaceButton)
+                        .addComponent(cancelButton))
+        );
+        layout.linkSize(SwingConstants.HORIZONTAL, replaceButton, cancelButton);
+
+        layout.setVerticalGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(labelReplaceFrom)
+                        .addComponent(inputReplaceFromField)
+                        .addComponent(replaceButton)
+                        )
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(labelReplaceTo)
+                        .addComponent(inputReplaceToField)
+                        .addComponent(cancelButton)
+                        .addComponent(inputReplaceFromField)
+                        .addComponent(inputReplaceToField))
+        );
+
+        replaceDialog.setSize(550, 120);
+        replaceDialog.setVisible(true);
+    }
+
     public void createFindDialog(Controller controller){
         findDialog = new JDialog(frame, "Find");
 
@@ -430,18 +492,12 @@ public class Viewer {
         findButton.addActionListener(controller);
         findButton.setActionCommand("Find_Word_Button");
 
-        JButton cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(controller);
-        cancelButton.setActionCommand("Cancel_Find_Dialog");
+        JButton cancelReplaceButton = new JButton("Cancel");
+        cancelReplaceButton.addActionListener(controller);
+        cancelReplaceButton.setActionCommand("Cancel_Find_Dialog");
 
         caseCheckBox = new JCheckBox("Match case");
         wrapCheckBox = new JCheckBox("Wrap around");
-        JRadioButton radioButtonUp = new JRadioButton("Find up");
-        radioButtonDown = new JRadioButton("Find down");
-
-        ButtonGroup group = new ButtonGroup();
-        group.add(radioButtonUp);
-        group.add(radioButtonDown);
 
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
@@ -453,20 +509,18 @@ public class Viewer {
                         .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(caseCheckBox)
-                                        .addComponent(radioButtonUp)
                                 )
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(wrapCheckBox)
-                                        .addComponent(radioButtonDown)
                                 ))
 
                 )
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(findButton)
-                        .addComponent(cancelButton))
+                        .addComponent(cancelReplaceButton))
 
         );
-        layout.linkSize(SwingConstants.HORIZONTAL, findButton, cancelButton);
+        layout.linkSize(SwingConstants.HORIZONTAL, findButton, cancelReplaceButton);
 
         layout.setVerticalGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
@@ -478,20 +532,64 @@ public class Viewer {
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(caseCheckBox)
                                         .addComponent(wrapCheckBox)
-                                )
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(radioButtonUp)
-                                        .addComponent(radioButtonDown)
                                 ))
-                .addComponent(cancelButton))
+                        .addComponent(cancelReplaceButton))
         );
 
         findDialog.setSize(550, 150);
         findDialog.setVisible(true);
     }
 
+    public void createGotoDialog(Controller controller){
+        gotoDialog = new JDialog(frame, "Go to");
+
+        Container contentPanel = gotoDialog.getContentPane();
+        GroupLayout layout = new GroupLayout(contentPanel);
+        contentPanel.setLayout(layout);
+
+        inputGotoLineField = new JTextField();
+
+        JLabel labelGoto = new JLabel();
+        labelGoto.setText("Row number");
+
+        JButton goToButton = new JButton("Go to");
+        goToButton.addActionListener(controller);
+        goToButton.setActionCommand("Go_To_Button");
+
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
+
+        layout.setVerticalGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(labelGoto)
+                        .addComponent(inputGotoLineField)
+                        .addComponent(goToButton)
+                )
+        );
+        layout.setHorizontalGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(labelGoto)
+                )
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(inputGotoLineField)
+                )
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(goToButton)
+                )
+        );
+        layout.linkSize(SwingConstants.VERTICAL,labelGoto, inputGotoLineField, goToButton);
+
+
+        gotoDialog.setSize(250, 70);
+        gotoDialog.setVisible(true);
+    }
+
     public void closeFindDialog(){
+        removeHilits();
         findDialog.dispose();
+    }
+    public void closeReplaceDialog() {
+        replaceDialog.dispose();
     }
 
     public void setHilitFindingWord(int startIndex, int endIndex) throws BadLocationException{
@@ -518,10 +616,28 @@ public class Viewer {
         return wrapCheckBox.isSelected();
     }
 
-    public boolean getRadioBtnDownValue(){
-        return radioButtonDown.isSelected();
+
+    public String getSelectedText() {
+        try {
+            return textArea.getSelectedText();
+        } catch (NullPointerException e) {
+            return "There is not selected text";
+        }
+
+    }
+    public String getReplaceFromWord() {
+        return inputReplaceFromField.getText();
     }
 
+    public String getReplaceToWord() {
+        return inputReplaceToField.getText();
+    }
 
+    public String getGotoRowNumber(){
+        return inputGotoLineField.getText();
+    }
 
+    public void setCursorPosition(int position){
+        textArea.setCaretPosition(position);
+    }
 }

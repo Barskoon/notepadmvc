@@ -1,5 +1,3 @@
-import java.io.IOException;
-
 public class CancelFindDialog implements Task {
     private Viewer viewer;
 

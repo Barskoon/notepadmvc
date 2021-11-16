@@ -1,3 +1,4 @@
+import javax.swing.event.CaretEvent;
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.HashMap;
@@ -34,6 +35,14 @@ public class Controller implements ActionListener {
         initializeCommand("Open_Find_Dialog", new OpenFindDialog(viewer, this));
         initializeCommand("Find_Word_Button", new FindWordsOccurrences(viewer));
         initializeCommand("Cancel_Find_Dialog", new CancelFindDialog(viewer));
+        initializeCommand("Find_Next", new FindNext(viewer));
+        initializeCommand("Open_Replace_Dialog", new OpenReplaceDialog(viewer, this));
+        initializeCommand("Cancel_Replace_Dialog", new CancelReplaceDialog(viewer));
+        initializeCommand("Replace_Word_Button", new ReplaceWord(viewer));
+        initializeCommand("Go_To", new OpenGotoDialog(viewer, this));
+        initializeCommand("Go_To_Button", new Goto(viewer));
+
+
     }
 
     private boolean initializeCommand(String command, Task task) {
