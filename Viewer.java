@@ -196,6 +196,14 @@ public class Viewer {
         textArea.getDocument();
     }
 
+    public void removeText() {
+        if (textArea.getSelectedText() != null) {
+            textArea.setText(textArea.getText().replace(textArea.getSelectedText(),""));
+        } else {
+            showMessage("Nothing to remove");
+        }
+    }
+
     private JMenuBar createJMenuBar(Controller controller) {
         JMenu fileMenu = createFileMenu(controller);
         JMenu editMenu = createEditMenu(controller);
