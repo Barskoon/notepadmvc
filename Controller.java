@@ -28,6 +28,7 @@ public class Controller implements ActionListener {
         initializeCommand("Cut", new Cut(viewer));
         initializeCommand("Copy", new Copy(viewer));
         initializeCommand("Paste", new Paste(viewer));
+        initializeCommand("Remove", new Remove(viewer));
         initializeCommand("Select_All", new SelectAll(viewer));
         initializeCommand("Time_And_Date", new TimeAndDate(viewer));
         initializeCommand("Choose_font", new Fonts(viewer));
