@@ -27,7 +27,15 @@ public class OpenFile implements Task {
                     startSaveOptionDialog();
                 }
             } else {
-                startSaveOptionDialog();
+                int n = viewer.getAnswer();
+                if (n == 1) {
+                    openFileMethod();
+                } else if (n == 0) {
+                    saveFile.doTask();
+                    openFileMethod();
+                } else {
+                    return;
+                }
             }
         } else {
             openFileMethod();
@@ -40,7 +48,11 @@ public class OpenFile implements Task {
             openFileMethod();
         } else if (n == 0) {
             saveFile.doTask();
-            openFileMethod();
+            if(saveFile.getCheck() == true){
+                openFileMethod();
+            } else {
+                return;
+            }
         } else {
             return;
         }
