@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.undo.UndoManager;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -15,6 +16,7 @@ public class Viewer {
     private boolean b;
     private File file;
     private Font font;
+    private UndoManager undoManager;
 
     public Viewer() {
         Controller controller = new Controller(this);
@@ -66,6 +68,14 @@ public class Viewer {
 
         b = false;
         file = null;
+        undoableTextArea();
+    }
+
+    private void undoableTextArea() {
+        undoManager = new UndoManager();
+        textArea.getDocument().addUndoableEditListener(
+                e -> undoManager.addEdit(e.getEdit())
+        );
     }
 
     public void setBool(boolean b) {
@@ -204,6 +214,21 @@ public class Viewer {
         }
     }
 
+    public void undoText() {
+        try {
+            undoManager.undo();
+        } catch (Exception e) {
+            showMessage("Nothing to undo");
+        }
+    }
+    public void redoText() {
+        try {
+            undoManager.redo();
+        } catch (Exception e) {
+            showMessage("Nothing to redo");
+        }
+    }
+
     private JMenuBar createJMenuBar(Controller controller) {
         JMenu fileMenu = createFileMenu(controller);
         JMenu editMenu = createEditMenu(controller);
@@ -269,6 +294,11 @@ public class Viewer {
         undoMenuItem.addActionListener(controller);
         undoMenuItem.setActionCommand("Undo");
 
+        JMenuItem redoMenuItem = new JMenuItem("Redo", new ImageIcon("Pictures/redo.png"));
+        redoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.SHIFT_MASK | ActionEvent.CTRL_MASK));
+        redoMenuItem.addActionListener(controller);
+        redoMenuItem.setActionCommand("Redo");
+
         JMenuItem cutMenuItem = new JMenuItem("Cut", new ImageIcon("Pictures/cut.png"));
         cutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
         cutMenuItem.addActionListener(controller);
@@ -322,6 +352,7 @@ public class Viewer {
         JMenu editMenu = new JMenu("Edit");
         editMenu.setMnemonic('E');
         editMenu.add(undoMenuItem);
+        editMenu.add(redoMenuItem);
         editMenu.add(new JSeparator());
         editMenu.add(cutMenuItem);
         editMenu.add(copyMenuItem);
