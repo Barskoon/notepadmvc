@@ -51,9 +51,21 @@ class OutputPrinter implements Printable {
     }
 
     private void setLines(BufferedReader br) throws IOException {
-        String line;
-        while ((line = br.readLine()) != null) {
-            lineList.add(line);
+        String lines ;
+        int MAX_WIDTH = 452;
+        FontMetrics metrics = new FontMetrics(font) {};
+        int startIndex = 0;
+        while ((lines = br.readLine()) != null) {
+            for (int lastIndex = 0; lastIndex < lines.length(); lastIndex++) {
+                String line = lines.substring(startIndex, lastIndex);
+                int lengthLine = (int)metrics.getStringBounds(line, null).getWidth();
+                if (lengthLine >= MAX_WIDTH) {
+                    lastIndex = lastIndex - 1;
+                    line = lines.substring(startIndex, lastIndex);
+                    lineList.add(line);
+                    startIndex = lastIndex;
+                }
+            }
         }
     }
 
