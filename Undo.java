@@ -7,6 +7,6 @@ public class Undo implements Task {
     }
 
     public void doTask() {
-
+        viewer.undoText();
     }
 }
