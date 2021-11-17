@@ -46,7 +46,6 @@ public class FindWord implements Task {
 
         private void initComponents() {
             Container container = getContentPane();
-            setModal(true);
             GroupLayout layout = new GroupLayout(container);
             container.setLayout(layout);
 
@@ -120,8 +119,7 @@ public class FindWord implements Task {
                 viewer.removeHilits();
 
                 firstIndexesOfSearchWord = indexesOfSearchWord(text, searchWord,
-                        caseCheckBox.isSelected(), caseCheckBox.isSelected(), viewer.getCursorPosition());
-                System.out.println(firstIndexesOfSearchWord);
+                        caseCheckBox.isSelected(), wrapCheckBox.isSelected(), viewer.getCursorPosition());
 
                 if(!firstIndexesOfSearchWord.isEmpty()){
                     for(int startIndex: firstIndexesOfSearchWord){
@@ -143,10 +141,15 @@ public class FindWord implements Task {
             if(!matchCase){
                 text = text.toLowerCase();
             }
-            int index = text.indexOf(searchWord);
+
+            int index;
 
             if(!wrapTextValue){
                 index = text.indexOf(searchWord, caretPosition);
+            } else {
+                index = text.indexOf(searchWord);
+                System.out.println(index);
+
             }
             ArrayList<Integer> listOfIndexOccurrences = new ArrayList<>();
             while (index>=0){
@@ -161,6 +164,7 @@ public class FindWord implements Task {
         }
         private void doClose(int retStatus) {
             returnStatus = retStatus;
+            viewer.removeHilits();
             setVisible(false);
         }
     }

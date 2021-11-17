@@ -123,7 +123,11 @@ public class Viewer {
     }
 
     public int getCursorPosition() {
-        return textArea.getCaretPosition();
+        try {
+            return textArea.getCaretPosition();
+        } catch (NullPointerException e) {
+            return 0;
+        }
     }
 
     public File getFile() {
