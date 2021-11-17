@@ -148,7 +148,6 @@ public class FindWord implements Task {
                 index = text.indexOf(searchWord, caretPosition);
             } else {
                 index = text.indexOf(searchWord);
-                System.out.println(index);
 
             }
             ArrayList<Integer> listOfIndexOccurrences = new ArrayList<>();

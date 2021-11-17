@@ -493,15 +493,14 @@ public class Viewer {
     }
 
     public String getSelectedText() {
-        try {
-            return textArea.getSelectedText();
-        } catch (NullPointerException e) {
-            return "There is not selected text";
-        }
-
+        return textArea.getSelectedText();
     }
 
     public void setCursorPosition(int position){
-        textArea.setCaretPosition(position);
+        try {
+            textArea.setCaretPosition(textArea.getDocument().getDefaultRootElement().getElement(position-1).getStartOffset());
+        } catch (NullPointerException e){
+            showMessage("Row is out of bounds");
+        }
     }
 }
