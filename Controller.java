@@ -33,6 +33,12 @@ public class Controller implements ActionListener {
         initializeCommand("Select_All", new SelectAll(viewer));
         initializeCommand("Time_And_Date", new TimeAndDate(viewer));
         initializeCommand("Choose_font", new Fonts(viewer));
+        initializeCommand("Find_Next", new FindNext(viewer));
+        initializeCommand("Open_Find_Dialog", new FindWord(viewer));
+        initializeCommand("Open_Replace_Dialog", new ReplaceWord(viewer));
+        initializeCommand("Go_To", new Goto(viewer));
+
+
     }
 
     private boolean initializeCommand(String command, Task task) {

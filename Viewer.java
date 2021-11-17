@@ -1,5 +1,8 @@
 import javax.swing.*;
 import javax.swing.undo.UndoManager;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -8,6 +11,7 @@ public class Viewer {
 
     private JFrame frame;
     private JTextArea textArea;
+    private JFileChooser fileChooser;
     private JMenuItem closeMenuItem;
     private JLabel tabSize;
     private JLabel caretPosition;
@@ -17,6 +21,10 @@ public class Viewer {
     private File file;
     private Font font;
     private UndoManager undoManager;
+
+    private Highlighter hilit;
+    private Highlighter.HighlightPainter painter;
+    private final Color HILIT_COLOR = Color.LIGHT_GRAY;
 
     public Viewer() {
         Controller controller = new Controller(this);
@@ -34,6 +42,10 @@ public class Viewer {
         textArea.setLineWrap(true);
         textArea.setFont(font);
         JScrollPane scrollPane = new JScrollPane(textArea);
+
+        hilit = new DefaultHighlighter();
+        painter = new DefaultHighlighter.DefaultHighlightPainter(HILIT_COLOR);
+        textArea.setHighlighter(hilit);
 
         footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
@@ -111,7 +123,11 @@ public class Viewer {
     }
 
     public int getCursorPosition() {
-        return textArea.getCaretPosition();
+        try {
+            return textArea.getCaretPosition();
+        } catch (NullPointerException e) {
+            return 0;
+        }
     }
 
     public File getFile() {
@@ -322,7 +338,7 @@ public class Viewer {
         JMenuItem findMenuItem = new JMenuItem("Find", new ImageIcon("Pictures/find.png"));
         findMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
         findMenuItem.addActionListener(controller);
-        findMenuItem.setActionCommand("Find");
+        findMenuItem.setActionCommand("Open_Find_Dialog");
 
         JMenuItem findNextMenuItem = new JMenuItem("Find next", new ImageIcon("Pictures/findMore.png"));
         findNextMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0));
@@ -332,7 +348,7 @@ public class Viewer {
         JMenuItem replaceMenuItem = new JMenuItem("Replace", new ImageIcon("Pictures/change.png"));
         replaceMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK));
         replaceMenuItem.addActionListener(controller);
-        replaceMenuItem.setActionCommand("Replace");
+        replaceMenuItem.setActionCommand("Open_Replace_Dialog");
 
         JMenuItem gotoMenuItem = new JMenuItem("Go to", new ImageIcon("Pictures/go.png"));
         gotoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, ActionEvent.CTRL_MASK));
@@ -466,5 +482,25 @@ public class Viewer {
         button.setActionCommand(actionCommand);
 
         return button;
+    }
+
+     public void setHilitFindingWord(int startIndex, int endIndex) throws BadLocationException{
+        hilit.addHighlight(startIndex, endIndex, painter);
+    }
+
+    public void removeHilits(){
+        hilit.removeAllHighlights();
+    }
+
+    public String getSelectedText() {
+        return textArea.getSelectedText();
+    }
+
+    public void setCursorPosition(int position){
+        try {
+            textArea.setCaretPosition(textArea.getDocument().getDefaultRootElement().getElement(position-1).getStartOffset());
+        } catch (NullPointerException e){
+            showMessage("Row is out of bounds");
+        }
     }
 }
