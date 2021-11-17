@@ -1,4 +1,3 @@
-import javax.swing.event.CaretEvent;
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.HashMap;
@@ -60,7 +59,4 @@ public class Controller implements ActionListener {
         }
     }
 
-    public void caretUpdate(CaretEvent caretEvent) {
-        viewer.footerUpdate();
-    }
 }
