@@ -29,11 +29,11 @@ public class Fonts implements Task {
         private JLabel jLabel1;
         private JLabel jLabel3;
         private JLabel jLabel2;
-        private JList lstSize;
+        private JList<String> lstSize;
         private JButton okButton;
         private JList<String> lstFont;
         private JScrollPane jScrollPane2;
-        private JList lstStyle;
+        private JList<String> lstStyle;
         private JPanel mainPanel;
         private JButton cancelButton;
         private JPanel previewPanel;
@@ -77,9 +77,9 @@ public class Fonts implements Task {
              */
             lstFont = new JList<>(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames());
             jScrollPane2 = new JScrollPane();
-            lstStyle = new JList();
+            lstStyle = new JList<>();
             jScrollPane3 = new JScrollPane();
-            lstSize = new JList();
+            lstSize = new JList<>();
             previewPanel = new JPanel();
             lblPreview = new JLabel();
             buttonPanel = new JPanel();

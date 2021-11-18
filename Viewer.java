@@ -1,4 +1,8 @@
 import javax.swing.*;
+import javax.swing.undo.UndoManager;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -15,7 +19,12 @@ public class Viewer {
     private JPanel footer;
     private boolean b;
     private File file;
-    private Font font = new Font("Dialog",Font.PLAIN,12);
+    private Font font;
+    private UndoManager undoManager;
+
+    private Highlighter hilit;
+    private Highlighter.HighlightPainter painter;
+    private final Color HILIT_COLOR = Color.LIGHT_GRAY;
 
     public Viewer() {
         Controller controller = new Controller(this);
@@ -23,6 +32,9 @@ public class Viewer {
         CaretController caretController = new CaretController(this);
 
         JMenuBar menuBar = createJMenuBar(controller);
+        JToolBar toolBar = createJToolBar(controller);
+
+        font = new Font("Dialog", Font.PLAIN, 12);
 
         fileChooser = new JFileChooser();
 
@@ -32,8 +44,10 @@ public class Viewer {
         textArea.setLineWrap(true);
         textArea.setFont(font);
         JScrollPane scrollPane = new JScrollPane(textArea);
-        TextLineNumber textLineNumber = new TextLineNumber(textArea);
-        scrollPane.setRowHeaderView(textLineNumber);
+
+        hilit = new DefaultHighlighter();
+        painter = new DefaultHighlighter.DefaultHighlightPainter(HILIT_COLOR);
+        textArea.setHighlighter(hilit);
 
         footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
@@ -50,7 +64,7 @@ public class Viewer {
         ImageIcon logo = new ImageIcon("Pictures/logo.png");
 
         frame = new JFrame("New - Notepad MVC");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -60,6 +74,7 @@ public class Viewer {
         frame.setIconImage(logo.getImage());
         frame.setJMenuBar(menuBar);
         frame.add(scrollPane);
+        frame.add(toolBar, BorderLayout.NORTH);
         frame.add(footer, BorderLayout.SOUTH);
         frame.setSize(800, 600);
         frame.setLocation(500, 50);
@@ -67,6 +82,14 @@ public class Viewer {
 
         b = false;
         file = null;
+        undoableTextArea();
+    }
+
+    private void undoableTextArea() {
+        undoManager = new UndoManager();
+        textArea.getDocument().addUndoableEditListener(
+                e -> undoManager.addEdit(e.getEdit())
+        );
     }
 
     public void setBool(boolean b) {
@@ -102,7 +125,11 @@ public class Viewer {
     }
 
     public int getCursorPosition() {
-        return textArea.getCaretPosition();
+        try {
+            return textArea.getCaretPosition();
+        } catch (NullPointerException e) {
+            return 0;
+        }
     }
 
     public File getFile() {
@@ -128,14 +155,14 @@ public class Viewer {
         } else {
             temp = temp + getFileName().getPath() + "?";
         }
-        Object[] options = {"Save", "Don't save", "Cancel"};
+        Object[] options = { "Save", "Don't save", "Cancel" };
         int n = JOptionPane.showOptionDialog(frame, temp, "Notepad MVC", JOptionPane.YES_NO_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
         return n;
     }
 
     public int getAnswerConfirmReplace() {
-        Object[] options = {"Yes", "No"};
+        Object[] options = { "Yes", "No" };
         int n = JOptionPane.showOptionDialog(frame, "Do you want to replace\n" + getFileName().getName() + "?",
                 // do not use a custom Icon
                 "Notepad MVC", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
@@ -172,7 +199,9 @@ public class Viewer {
         textArea.setFont(font);
     }
 
-    public Font getFonts() { return font; }
+    public Font getFonts() {
+        return font;
+    }
 
     public void cutText() {
         if (textArea.getSelectedText() != null) {
@@ -193,6 +222,29 @@ public class Viewer {
     public void pasteText() {
         textArea.paste();
         textArea.getDocument();
+    }
+
+    public void removeText() {
+        if (textArea.getSelectedText() != null) {
+            textArea.setText(textArea.getText().replace(textArea.getSelectedText(),""));
+        } else {
+            showMessage("Nothing to remove");
+        }
+    }
+
+    public void undoText() {
+        try {
+            undoManager.undo();
+        } catch (Exception e) {
+            showMessage("Nothing to undo");
+        }
+    }
+    public void redoText() {
+        try {
+            undoManager.redo();
+        } catch (Exception e) {
+            showMessage("Nothing to redo");
+        }
     }
 
     private JMenuBar createJMenuBar(Controller controller) {
@@ -260,6 +312,11 @@ public class Viewer {
         undoMenuItem.addActionListener(controller);
         undoMenuItem.setActionCommand("Undo");
 
+        JMenuItem redoMenuItem = new JMenuItem("Redo", new ImageIcon("Pictures/redo.png"));
+        redoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.SHIFT_MASK | ActionEvent.CTRL_MASK));
+        redoMenuItem.addActionListener(controller);
+        redoMenuItem.setActionCommand("Redo");
+
         JMenuItem cutMenuItem = new JMenuItem("Cut", new ImageIcon("Pictures/cut.png"));
         cutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
         cutMenuItem.addActionListener(controller);
@@ -283,7 +340,7 @@ public class Viewer {
         JMenuItem findMenuItem = new JMenuItem("Find", new ImageIcon("Pictures/find.png"));
         findMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
         findMenuItem.addActionListener(controller);
-        findMenuItem.setActionCommand("Find");
+        findMenuItem.setActionCommand("Open_Find_Dialog");
 
         JMenuItem findNextMenuItem = new JMenuItem("Find next", new ImageIcon("Pictures/findMore.png"));
         findNextMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0));
@@ -293,7 +350,7 @@ public class Viewer {
         JMenuItem replaceMenuItem = new JMenuItem("Replace", new ImageIcon("Pictures/change.png"));
         replaceMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK));
         replaceMenuItem.addActionListener(controller);
-        replaceMenuItem.setActionCommand("Replace");
+        replaceMenuItem.setActionCommand("Open_Replace_Dialog");
 
         JMenuItem gotoMenuItem = new JMenuItem("Go to", new ImageIcon("Pictures/go.png"));
         gotoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, ActionEvent.CTRL_MASK));
@@ -313,6 +370,7 @@ public class Viewer {
         JMenu editMenu = new JMenu("Edit");
         editMenu.setMnemonic('E');
         editMenu.add(undoMenuItem);
+        editMenu.add(redoMenuItem);
         editMenu.add(new JSeparator());
         editMenu.add(cutMenuItem);
         editMenu.add(copyMenuItem);
@@ -330,8 +388,8 @@ public class Viewer {
     }
 
     private JMenu createFormatMenu(Controller controller) {
-        JCheckBoxMenuItem checkBoxMenuItem = new JCheckBoxMenuItem("Word-wrap", new ImageIcon("Pictures/wrap.png"), true);
-        checkBoxMenuItem.setActionCommand("word_wrap");
+        JCheckBoxMenuItem checkBoxMenuItem = new JCheckBoxMenuItem("Word-wrap", new ImageIcon("Pictures/wrap.png"),
+                true);
 
         ActionListener actionListener = actionEvent -> textArea.setLineWrap(checkBoxMenuItem.isSelected());
         checkBoxMenuItem.addActionListener(actionListener);
@@ -349,22 +407,25 @@ public class Viewer {
     }
 
     private JMenu createViewMenu(Controller controller) {
-        JCheckBoxMenuItem statusBarMenuItem = new JCheckBoxMenuItem("Status bar", new ImageIcon("Pictures/showCross.png"), true);
-        statusBarMenuItem.setActionCommand("Status_Bar");
+        ImageIcon showCrossIcon = new ImageIcon("Pictures/showCross.png");
+        ImageIcon showIcon = new ImageIcon("Pictures/show.png");
+        JCheckBoxMenuItem statusBarMenuItem = new JCheckBoxMenuItem("Status bar", showCrossIcon, true);
 
         ActionListener actionListener = actionEvent -> {
             AbstractButton abstractButton = (AbstractButton) actionEvent.getSource();
             boolean selected = abstractButton.getModel().isSelected();
             if (selected) {
+                statusBarMenuItem.setIcon(showCrossIcon);
                 footer.setVisible(true);
             } else {
+                statusBarMenuItem.setIcon(showIcon);
                 footer.setVisible(false);
             }
         };
 
         statusBarMenuItem.addActionListener(actionListener);
         JMenu viewMenu = new JMenu("View");
-        viewMenu.setMnemonic(KeyEvent.VK_I);
+        viewMenu.setMnemonic(KeyEvent.VK_V);
         viewMenu.add(statusBarMenuItem);
 
         return viewMenu;
@@ -382,9 +443,70 @@ public class Viewer {
         aboutMenuItem.setActionCommand("About");
 
         JMenu faqMenu = new JMenu("FAQ");
+        faqMenu.setMnemonic(KeyEvent.VK_F1);
         faqMenu.add(helpMenuItem);
         faqMenu.add(aboutMenuItem);
 
         return faqMenu;
+    }
+
+    private JToolBar createJToolBar(Controller controller) {
+        JButton newButton = makeNavigationButton("New", "new", "Create_New_Document", controller);
+        JButton openButton = makeNavigationButton("Open", "open", "Open_File", controller);
+        JButton saveButton = makeNavigationButton("Save", "save", "Save_File", controller);
+        JButton printButton = makeNavigationButton("Print", "print", "Printing_File", controller);
+        JButton cutButton = makeNavigationButton("Cut", "cut", "Cut", controller);
+        JButton copyButton = makeNavigationButton("Copy", "copy", "Copy", controller);
+        JButton pasteButton = makeNavigationButton("Paste", "past", "Paste", controller);
+        JButton fontsButton = makeNavigationButton("Fonts", "font", "Choose_font", controller);
+
+        JToolBar toolBar = new JToolBar();
+        toolBar.setFloatable(true);
+        toolBar.setRollover(true);
+        toolBar.add(newButton);
+        toolBar.add(openButton);
+        toolBar.add(saveButton);
+        toolBar.add(printButton);
+        toolBar.addSeparator();
+        toolBar.add(cutButton);
+        toolBar.add(copyButton);
+        toolBar.add(pasteButton);
+        toolBar.add(fontsButton);
+
+        return toolBar;
+    }
+
+    private JButton makeNavigationButton(String toolTipText, String imageName, String actionCommand, Controller controller) {
+        String imgLocation = "Pictures/"
+                + imageName
+                + ".png";
+
+        JButton button = new JButton();
+        button.setIcon(new ImageIcon(imgLocation));
+        button.setToolTipText(toolTipText);
+        button.addActionListener(controller);
+        button.setActionCommand(actionCommand);
+
+        return button;
+    }
+
+     public void setHilitFindingWord(int startIndex, int endIndex) throws BadLocationException{
+        hilit.addHighlight(startIndex, endIndex, painter);
+    }
+
+    public void removeHilits(){
+        hilit.removeAllHighlights();
+    }
+
+    public String getSelectedText() {
+        return textArea.getSelectedText();
+    }
+
+    public void setCursorPosition(int position){
+        try {
+            textArea.setCaretPosition(textArea.getDocument().getDefaultRootElement().getElement(position-1).getStartOffset());
+        } catch (NullPointerException e){
+            showMessage("Row is out of bounds");
+        }
     }
 }
