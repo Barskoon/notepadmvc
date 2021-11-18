@@ -10,27 +10,29 @@ import java.awt.Container;
 
 public class Goto implements Task {
     private Viewer viewer;
+    private JDialog jDialog;
 
     public Goto(Viewer viewer) {
         this.viewer = viewer;
+        jDialog = new JDialog();
     }
 
-    public void doTask(){
-        OpenGotoDialog openGotoDialog = new OpenGotoDialog();
-        openGotoDialog.setVisible(true);
+    public void doTask() {
+        OpenGotoDialog openGotoDialog = new OpenGotoDialog(this);
     }
 
-    private class OpenGotoDialog extends JDialog {
+    private class OpenGotoDialog {
         private JTextField inputGotoLineField;
 
-        public OpenGotoDialog() {
+        public OpenGotoDialog(Goto aGoto) {
             initComponents();
-            setTitle("Go to");
+            jDialog.setTitle("Go to");
+            aGoto.jDialog.setVisible(true);
         }
 
         private void initComponents() {
-            Container container = getContentPane();
-            setModal(true);
+            Container container = jDialog.getContentPane();
+            jDialog.setModal(true);
             GroupLayout layout = new GroupLayout(container);
             container.setLayout(layout);
 
@@ -68,11 +70,9 @@ public class Goto implements Task {
                             .addComponent(goToButton)
                     )
             );
+
             layout.linkSize(SwingConstants.VERTICAL,labelGoto, inputGotoLineField, goToButton);
-
-
-            setSize(new java.awt.Dimension(250, 90));
+            jDialog.setSize(new java.awt.Dimension(250, 90));
         }
-
     }
 }

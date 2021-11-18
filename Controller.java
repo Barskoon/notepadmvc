@@ -37,8 +37,7 @@ public class Controller implements ActionListener {
         initializeCommand("Open_Find_Dialog", new FindWord(viewer));
         initializeCommand("Open_Replace_Dialog", new ReplaceWord(viewer));
         initializeCommand("Go_To", new Goto(viewer));
-
-
+        initializeCommand("Help", new Help(viewer));
     }
 
     private boolean initializeCommand(String command, Task task) {
