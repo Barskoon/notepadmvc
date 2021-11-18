@@ -507,4 +507,8 @@ public class Viewer {
             showMessage("Row is out of bounds");
         }
     }
+
+    public void showMessageIcon(String message) {
+        JOptionPane.showMessageDialog(frame, message, "About", 0, new ImageIcon("Pictures/logo.png"));
+    }
 }
