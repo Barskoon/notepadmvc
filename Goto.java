@@ -33,6 +33,7 @@ public class Goto implements Task {
         private void initComponents() {
             Container container = jDialog.getContentPane();
             jDialog.setModal(true);
+
             GroupLayout layout = new GroupLayout(container);
             container.setLayout(layout);
 
