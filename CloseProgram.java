@@ -12,7 +12,7 @@ public class CloseProgram implements Task {
 		if (viewer.getBool() == true) {
 			if (viewer.getFileName() == null) {
 				if (viewer.getInputText().equals("")) {
-					System.exit(1);
+					System.exit(0);
 				} else {
 					startSaveOptionDialog();
 				}
@@ -20,17 +20,25 @@ public class CloseProgram implements Task {
 				startSaveOptionDialog();
 			}
 		} else {
-			System.exit(1);
+			System.exit(0);
 		}
 	}
 
 	private void startSaveOptionDialog() {
 		int n = viewer.getAnswer();
 		if (n == 1) {
-			System.exit(1);
+			System.exit(0);
 		} else if (n == 0) {
-			saveFile.doTask();
-			System.exit(1);
+			if (viewer.getFileName() == null) {
+				saveFile.doTask();
+				if(saveFile.getCheck() == true){
+					System.exit(0);
+				} else {
+					return;
+				}
+			} else{
+				System.exit(0);
+			}
 		} else {
 			return;
 		}

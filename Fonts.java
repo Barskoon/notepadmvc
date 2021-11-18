@@ -5,35 +5,33 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class Fonts implements Task {
-    private final Viewer viewer;
+    private Viewer viewer;
+    private JDialog jDialog;
 
     public Fonts (Viewer viewer) {
         this.viewer = viewer;
+        jDialog = new JDialog();
     }
 
     public void doTask() {
-        JFontChooser Fonts = new JFontChooser();
-        Fonts.setVisible(true);
-        viewer.updateFont(Fonts.getFont());
+        JFontChooser customFonts = new JFontChooser(this);
     }
 
-    private class JFontChooser extends JDialog {
-        /** A return status code - returned if Cancel button has been pressed */
+    private class JFontChooser {
         public static final int CANCEL = 0;
-        /** A return status code - returned if OK button has been pressed */
         public static final int OK = 1;
-        //the font
+
         private Font font;
         private JPanel fontPanel;
         private JScrollPane jScrollPane1;
         private JLabel jLabel1;
         private JLabel jLabel3;
         private JLabel jLabel2;
-        private JList lstSize;
+        private JList<String> lstSize;
         private JButton okButton;
         private JList<String> lstFont;
         private JScrollPane jScrollPane2;
-        private JList lstStyle;
+        private JList<String> lstStyle;
         private JPanel mainPanel;
         private JButton cancelButton;
         private JPanel previewPanel;
@@ -42,28 +40,19 @@ public class Fonts implements Task {
         private JScrollPane jScrollPane3;
         private int returnStatus = CANCEL;
 
-
-        //Constructor
-        public JFontChooser() {
+        public JFontChooser(Fonts fonts) {
+            fonts.jDialog.setVisible(true);
             this.font = viewer.getFonts();
             initComponents();
             lblPreview.setFont(font);
         }
 
-        /** @return the font chosen by the user */
         public Font getFont() {
             return font;
         }
 
-        /** @return the return status of this dialog - one of OK or CANCEL */
-        public int getReturnStatus() {
-            return returnStatus;
-        }
-
-        /** This method is called from within the constructor to
-         * initialize the form.
-         */
-        private void initComponents() {//GEN-BEGIN:initComponents
+        @SuppressWarnings({"unchecked", "serial", "rawtypes"})
+        private void initComponents() {
             GridBagConstraints gridBagConstraints;
 
             mainPanel = new JPanel();
@@ -72,10 +61,11 @@ public class Fonts implements Task {
             jLabel2 = new JLabel();
             jLabel3 = new JLabel();
             jScrollPane1 = new JScrollPane();
-            /* The code below queries the system for all of the available fonts,
-              and loads them in the list box, satisfying the first requirement of the dialog.
-             */
-            lstFont = new JList<>(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames());
+
+            lstFont = new JList<>(GraphicsEnvironment.
+                    getLocalGraphicsEnvironment().
+                    getAvailableFontFamilyNames());
+
             jScrollPane2 = new JScrollPane();
             lstStyle = new JList();
             jScrollPane3 = new JScrollPane();
@@ -86,10 +76,10 @@ public class Fonts implements Task {
             okButton = new JButton();
             cancelButton = new JButton();
 
-            setTitle("Select Font");
-            setModal(true);
-            setResizable(false);
-            addWindowListener(new WindowAdapter() {
+            jDialog.setTitle("Select Font");
+            jDialog.setModal(true);
+            jDialog.setResizable(false);
+            jDialog.addWindowListener(new WindowAdapter() {
                 public void windowClosing(WindowEvent evt) {
                     closeDialog(evt);
                 }
@@ -142,6 +132,7 @@ public class Fonts implements Task {
                 public int getSize() { return strings.length; }
                 public Object getElementAt(int i) { return strings[i]; }
             });
+
             lstStyle.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             lstStyle.addListSelectionListener(new ListSelectionListener() {
                 public void valueChanged(ListSelectionEvent evt) {
@@ -195,7 +186,7 @@ public class Fonts implements Task {
 
             mainPanel.add(previewPanel);
 
-            getContentPane().add(mainPanel, BorderLayout.CENTER);
+            jDialog.getContentPane().add(mainPanel, BorderLayout.CENTER);
 
             buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
@@ -216,18 +207,16 @@ public class Fonts implements Task {
             });
 
             buttonPanel.add(cancelButton);
-
-            getContentPane().add(buttonPanel, BorderLayout.SOUTH);
-
-            pack();
+            jDialog.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+            jDialog.pack();
             java.awt.Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-            setSize(new java.awt.Dimension(443, 429));
-            setLocation((screenSize.width-443)/2,(screenSize.height-429)/2);
-        }//GEN-END:initComponents
+            jDialog.setSize(new java.awt.Dimension(443, 429));
+            jDialog.setLocation((screenSize.width-443)/2,(screenSize.height-429)/2);
+        }
 
-        private void lstStyleValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstStyleValueChanged
+        private void lstStyleValueChanged(javax.swing.event.ListSelectionEvent evt) {
             int style = -1;
-            String selStyle = (String)lstStyle.getSelectedValue();
+            String selStyle = lstStyle.getSelectedValue();
             if(selStyle.equals("Plain"))
                 style = Font.PLAIN;
             if(selStyle.equals("Bold"))
@@ -239,35 +228,35 @@ public class Fonts implements Task {
 
             font = new Font(font.getFamily(),style,font.getSize());
             lblPreview.setFont(font);
-        }//GEN-LAST:event_lstStyleValueChanged
+        }
 
-        private void lstSizeValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstSizeValueChanged
-            int size = Integer.parseInt((String)lstSize.getSelectedValue());
+        private void lstSizeValueChanged(javax.swing.event.ListSelectionEvent evt) {
+            int size = Integer.parseInt(lstSize.getSelectedValue());
             font = new Font(font.getFamily(),font.getStyle(),size);
             lblPreview.setFont(font);
-        }//GEN-LAST:event_lstSizeValueChanged
+        }
 
-        private void lstFontValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstFontValueChanged
+        private void lstFontValueChanged(javax.swing.event.ListSelectionEvent evt) {
             font = new Font(lstFont.getSelectedValue(),font.getStyle(),font.getSize());
             lblPreview.setFont(font);
-        }//GEN-LAST:event_lstFontValueChanged
+        }
 
-        private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {
             doClose(OK);
-        }//GEN-LAST:event_okButtonActionPerformed
+        }
 
-        private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {
             doClose(CANCEL);
-        }//GEN-LAST:event_cancelButtonActionPerformed
+        }
 
-        /** Closes the dialog */
         private void closeDialog(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_closeDialog
             doClose(CANCEL);
-        }//GEN-LAST:event_closeDialog
+        }
 
         private void doClose(int retStatus) {
             returnStatus = retStatus;
-            setVisible(false);
+            jDialog.setVisible(false);
+            viewer.updateFont(lblPreview.getFont());
         }
     }
 }
