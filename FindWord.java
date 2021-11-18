@@ -6,9 +6,7 @@ import javax.swing.JDialog;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import java.awt.Container;
-
 import javax.swing.GroupLayout;
-
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,18 +14,19 @@ import java.util.ArrayList;
 
 public class FindWord implements Task {
     private Viewer viewer;
+    private JDialog jDialog;
 
     public FindWord(Viewer viewer) {
         this.viewer = viewer;
+        jDialog = new JDialog();
     }
 
     @Override
     public void doTask() {
-        OpenFindDialog openFindDialog = new OpenFindDialog();
-        openFindDialog.setVisible(true);
+        OpenFindDialog openFindDialog = new OpenFindDialog(this);
     }
 
-    private class OpenFindDialog extends JDialog {
+    private class OpenFindDialog {
         private JTextField inputSearchField;
         private JCheckBox caseCheckBox;
         private JCheckBox wrapCheckBox;
@@ -39,13 +38,14 @@ public class FindWord implements Task {
         public static final int CANCEL = 0;
         private int returnStatus = CANCEL;
 
-        public OpenFindDialog() {
+        public OpenFindDialog(FindWord findWord) {
+            findWord.jDialog.setVisible(true);
             initComponents();
-            setTitle("Find word");
+            jDialog.setTitle("Find word");
         }
 
         private void initComponents() {
-            Container container = getContentPane();
+            Container container = jDialog.getContentPane();
             GroupLayout layout = new GroupLayout(container);
             container.setLayout(layout);
 
@@ -109,7 +109,7 @@ public class FindWord implements Task {
                             .addComponent(cancelButton))
             );
 
-            setSize(550, 150);
+            jDialog.setSize(550, 150);
         }
 
         private void findOccurrences(){
@@ -164,7 +164,7 @@ public class FindWord implements Task {
         private void doClose(int retStatus) {
             returnStatus = retStatus;
             viewer.removeHilits();
-            setVisible(false);
+            jDialog.setVisible(false);
         }
     }
 }

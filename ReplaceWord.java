@@ -8,35 +8,36 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import java.awt.Container;
 
-public class ReplaceWord implements Task{
+public class ReplaceWord implements Task {
     private Viewer viewer;
+    private JDialog button;
 
     public ReplaceWord(Viewer viewer) {
         this.viewer = viewer;
-
+        button =  new JDialog();
     }
 
     @Override
-    public void doTask(){
-        OpenReplaceDialog openReplaceDialog = new OpenReplaceDialog();
-        openReplaceDialog.setVisible(true);
+    public void doTask() {
+        OpenReplaceDialog openReplaceDialog = new OpenReplaceDialog(this);
     }
 
-    private class OpenReplaceDialog extends JDialog {
+    private class OpenReplaceDialog {
         public static final int CANCEL = 0;
         private int returnStatus = CANCEL;
 
         private JTextField inputReplaceFromField;
         private JTextField inputReplaceToField;
 
-        public OpenReplaceDialog() {
+        public OpenReplaceDialog(ReplaceWord replaceWord) {
             initComponents();
-            setTitle("Replace");
+            button.setTitle("Replace");
+            replaceWord.button.setVisible(true);
         }
 
         private void initComponents() {
-            Container container = getContentPane();
-            setModal(true);
+            Container container = button.getContentPane();
+            button.setModal(true);
             GroupLayout layout = new GroupLayout(container);
             container.setLayout(layout);
 
@@ -94,7 +95,7 @@ public class ReplaceWord implements Task{
                             .addComponent(inputReplaceToField))
             );
 
-            setSize(550, 120);
+            button.setSize(550, 120);
         }
 
         private void replaceWord(){
@@ -108,13 +109,10 @@ public class ReplaceWord implements Task{
         private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {
             doClose(CANCEL);
         }
+
         private void doClose(int retStatus) {
             returnStatus = retStatus;
-            setVisible(false);
+            button.setVisible(false);
         }
     }
-
-
-
-
 }

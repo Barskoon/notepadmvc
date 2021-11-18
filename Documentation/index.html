@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script>document.getElementsByTagName("html")[0].className += " js";</script>
+	<link rel="stylesheet" href="assets/css/style.css">
+	<title>NotepadMVC help guide</title>
+
+	<style>
+		table {
+		  font-family: arial, sans-serif;
+		  font-size: medium;
+		  border-collapse: collapse;
+		  width: 100%;
+		}
+		
+		td, th {
+		  border: 1px solid #dddddd;
+		  text-align: left;
+		  padding: 8px;
+		}
+		
+		tr:nth-child(even) {
+		  background-color: #dddddd;
+		}
+		th {
+			font-weight: bold;
+		}
+	</style>
+
+</head>
+
+<body>
+	<header class="cd-header flex flex-column flex-center">
+		<div class="text-component text-center">
+			<h1>NotepadMVC help guide</h1>
+		</div>
+	</header>
+
+	<section class="cd-faq js-cd-faq container max-width-md margin-top-lg margin-bottom-lg">
+		<ul class="cd-faq__categories">
+			<li><a class="cd-faq__category cd-faq__category-selected truncate" href="#introduction">Introduction</a></li>
+			<li><a class="cd-faq__category truncate" href="#file">File basics</a></li>
+		</ul> <!-- cd-faq__categories -->
+
+		<div class="cd-faq__items">
+			<ul id="introduction" class="cd-faq__group">
+				<li class="cd-faq__title">
+					<h2>Introduction</h2>
+				</li>
+				<li class="cd-faq__item cd-faq__item-visible">
+					<a class="cd-faq__trigger" href="#0"><span>Say hello!</span></a>
+					<div class="cd-faq__content cd-faq__content--visible">
+						<div class="text-component">
+							<p>
+								Welcome to the NotepadMVC help guide. For a quick introduction into both NotepadMVC's most basic features, as well as some advanced keyboard shortcuts, visit the <a href="#get_start">Get started</a> with gedit and <a href="#shorcut">Shortcut keys</a> topics.
+							</p>
+							<p>
+								Other help topics are grouped together into sections below. Enjoy using NotepadMVC!
+							</p>
+						</div>
+					</div> <!-- cd-faq__content -->
+				</li>
+
+				<li id="get_start" class="cd-faq__item">
+					<a class="cd-faq__trigger" href="#0"><span>Get started</span></a>
+					<div class="cd-faq__content">
+						<div class="text-component">
+							<p>
+								NotepadMVC is a simple text editor. You can use it to prepare simple notes and documents, or you can use some of its advanced features, making it your own software development environment.
+							</p>
+							<img src="images/notepad.png" alt="NotepadMVC">
+							<p>
+								Once NotepadMVC launches, you can start writing right away. To save your text, just click the Save icon in the NotepadMVC toolbar.
+							</p>
+						</div>
+					</div> <!-- cd-faq__content -->
+				</li>
+
+				<li id="shorcut" class="cd-faq__item">
+					<a class="cd-faq__trigger" href="#0"><span>Shortcut keys</span></a>
+					<div class="cd-faq__content">
+						<div class="text-component">
+							<p>
+								Use shortcut keys to perform common tasks more quickly than with the mouse and menus. The following tables list all of NotepadMVC's shortcut keys.
+							</p>
+							<ul class="cd-faq__group">
+								<li class="cd-faq__item cd-faq__item-visible">
+									<a class="cd-faq__trigger" href="#0"><span>Shortcut keys for working with files</span></a>
+									<div class="cd-faq__content cd-faq__content--visible">
+										<div class="text-component">
+											<table>
+												<tr>
+													<th>Action</th>
+													<th>Keyboard shortcut</th>
+												</tr>
+												<tr>
+													<td>Create a new document</td>
+													<td>Ctrl + N</td>
+												</tr>
+												<tr>
+													<td>Open a document</td>
+													<td>Ctrl + O</td>
+												</tr>
+												<tr>
+													<td>Save the current document</td>
+													<td>Ctrl + S</td>
+												</tr>
+												<tr>
+													<td>Save the current document with a new filename</td>
+													<td>Shift + S</td>
+												</tr>
+												<tr>
+													<td>Print the current document</td>
+													<td>Ctrl + P</td>
+												</tr>
+												<tr>
+													<td>Quit NotepadMVC</td>
+													<td>Ctrl + Q</td>
+												</tr>
+											</table>
+										</div>
+									</div>
+								</li>
+								<li class="cd-faq__item">
+									<a class="cd-faq__trigger" href="#0"><span>Shortcut keys for editing files</span></a>
+									<div class="cd-faq__content">
+										<div class="text-component">
+											<table>
+												<tr>
+													<th>Action</th>
+													<th>Keyboard shortcut</th>
+												</tr>
+												<tr>
+													<td>Undo the last action</td>
+													<td>Ctrl + Z</td>
+												</tr>
+												<tr>
+													<td>Cut the selected text or region and place it on the clipboard</td>
+													<td>Ctrl + X</td>
+												</tr>
+												<tr>
+													<td>Copy the selected text or region onto the clipboard</td>
+													<td>Ctrl + C</td>
+												</tr>
+												<tr>
+													<td>Paste the contents of the clipboard</td>
+													<td>Ctrl + V</td>
+												</tr>
+												<tr>
+													<td>Select all text in the file</td>
+													<td>Ctrl + A</td>
+												</tr>
+												<tr>
+													<td>Delete the selected text or region</td>
+													<td>Delete</td>
+												</tr>
+											</table>
+										</div>
+									</div>
+								</li>
+								<li class="cd-faq__item">
+									<a class="cd-faq__trigger" href="#0"><span>Shortcut keys for searching and navigation</span></a>
+									<div class="cd-faq__content">
+										<div class="text-component">
+											<table>
+												<tr>
+													<th>Action</th>
+													<th>Keyboard shortcut</th>
+												</tr>
+												<tr>
+													<td>Find a string</td>
+													<td>Ctrl + F</td>
+												</tr>
+												<tr>
+													<td>Find the next instance of the string</td>
+													<td>F3</td>
+												</tr>
+												<tr>
+													<td>Search and Replace</td>
+													<td>Ctrl + H</td>
+												</tr>
+												<tr>
+													<td>Goto line</td>
+													<td>Ctrl + G</td>
+												</tr>
+												<tr>
+													<td>Paste current time and date</td>
+													<td>F5</td>
+												</tr>
+											</table>
+										</div>
+									</div>
+								</li>
+								<li class="cd-faq__item">
+									<a class="cd-faq__trigger" href="#0"><span>Shortcut keys for user help</span></a>
+									<div class="cd-faq__content">
+										<div class="text-component">
+											<table>
+												<tr>
+													<th>Action</th>
+													<th>Keyboard shortcut</th>
+												</tr>
+												<tr>
+													<td>Open the gedit user guide</td>
+													<td>F1</td>
+												</tr>
+												<tr>
+													<td>About NotepadMVC version</td>
+													<td>F2</td>
+												</tr>
+											</table>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div> <!-- cd-faq__content -->
+				</li>
+			</ul> <!-- cd-faq__group -->
+
+			<ul id="file" class="cd-faq__group">
+				<li class="cd-faq__title">
+					<h2>File basics</h2>
+				</li>
+				<li class="cd-faq__item">
+					<a class="cd-faq__trigger" href="#0"><span>Create a new file</span></a>
+					<div class="cd-faq__content">
+						<div class="text-component">
+							<p>
+								The easiest way to create a new file in NotepadMVC, is to click the Create a new document button on the the toolbar, or press Ctrl + T.
+							</p>
+							<p>
+								Any one of these actions will create a new file in the NotepadMVC window.
+							</p>
+						</div>
+					</div> <!-- cd-faq__content -->
+				</li>
+
+				<li class="cd-faq__item">
+					<a class="cd-faq__trigger" href="#0"><span>Open a file</span></a>
+					<div class="cd-faq__content">
+						<div class="text-component">
+							<p>
+								To open a file in NotepadMVC, click the Open button, or press Ctrl + O.
+							</p>
+							<p>
+								This will cause the Open dialog to appear. Use your mouse or keyboard to select the file that you wish to open, and then click Open. The file that you've selected will open.
+							</p>
+							<p>
+								To close the Open dialog without opening a file, click Cancel.
+							</p>
+						</div>
+					</div> <!-- cd-faq__content -->
+				</li>
+
+				<li class="cd-faq__item">
+					<a class="cd-faq__trigger" href="#0"><span>Save a file</span></a>
+					<div class="cd-faq__content">
+						<div class="text-component">
+							<p>
+								To save a file in NotepadMVC, click on the Save button on the right side of the toolbar or just press Ctrl + S.
+							</p>
+							<p>
+								If you are saving a new file, a dialog will appear, and you can select a name for the file, as well as the directory where you would like the file to be saved.
+							</p>
+						</div>
+					</div> <!-- cd-faq__content -->
+				</li>
+
+				<li class="cd-faq__item">
+					<a class="cd-faq__trigger" href="#0"><span>Replace text</span></a>
+					<div class="cd-faq__content">
+						<div class="text-component">
+							<p>
+								In progress
+							</p>
+						</div>
+					</div> <!-- cd-faq__content -->
+				</li>
+
+				<li class="cd-faq__item">
+					<a class="cd-faq__trigger" href="#0"><span>Search for text</span></a>
+					<div class="cd-faq__content">
+						<div class="text-component">
+							<p>
+								In progress
+							</p>
+						</div>
+					</div> <!-- cd-faq__content -->
+				</li>
+
+				<li class="cd-faq__item">
+					<a class="cd-faq__trigger" href="#0"><span>Undo a recent action</span></a>
+					<div class="cd-faq__content">
+						<div class="text-component">
+							<p>
+								If you make a mistake while using NotepadMVC, you can undo it by pressing Ctrl + Z.
+							</p>
+						</div>
+					</div> <!-- cd-faq__content -->
+				</li>
+			</ul> <!-- cd-faq__group -->
+		</div> <!-- cd-faq__items -->
+
+		<a href="#0" class="cd-faq__close-panel text-replace">Close</a>
+
+		<div class="cd-faq__overlay" aria-hidden="true"></div>
+	</section> <!-- cd-faq -->
+	<script src="assets/js/util.js"></script> <!-- util functions included in the CodyHouse framework -->
+	<script src="assets/js/main.js"></script>
+</body>
+
+</html>
